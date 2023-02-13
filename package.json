@@ -9,7 +9,20 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "sass": "^1.58.0",
     "typescript": "^4.9.3",
     "vite": "^4.1.0"
+  },
+  "dependencies": {
+    "@rushstack/eslint-patch": "^1.2.0",
+    "@typescript-eslint/eslint-plugin": "^5.13.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "airbnb": "^0.0.2",
+    "eslint": "8.22.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "stylelint": "^15.1.0",
+    "stylelint-config-recommended": "^10.0.1",
+    "stylelint-config-standard-scss": "^7.0.0"
   }
 }
