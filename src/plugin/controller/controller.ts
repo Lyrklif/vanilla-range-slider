@@ -19,6 +19,7 @@ const controller = (htmlElement: HTMLElement | Element, params: TParams) => {
 
   const input = document.createElement('input')
   input.setAttribute('type', 'number')
+  input.setAttribute('value', `${value}`)
   input.setAttribute('class', 'vanilla-slider-ts__input')
   
   const bar = document.createElement('div')
@@ -38,6 +39,11 @@ const controller = (htmlElement: HTMLElement | Element, params: TParams) => {
     let knobOffset = e.clientX - wrapLeft
     let left = getKnobOffsetPercent(knobOffset)
     knob.style.cssText = `left: ${left}%`
+
+    value = left * max / 100
+    const valueWithStep = Number((Math.round((value - min) / step) * step + min).toFixed(1));
+
+    input.setAttribute('value', `${valueWithStep}`)
   }
   const stopGragging = () => {
     knob.removeEventListener('mousemove', moveKnob)
