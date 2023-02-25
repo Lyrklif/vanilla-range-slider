@@ -1,7 +1,16 @@
-const initSlider = (targetName: string) => {
-  const elements = document.querySelectorAll(targetName);
+import controller from './controller/controller'
 
-  console.log('TTT elements', elements);
+const initSlider = (selector: string): void => {
+  const elements = document.querySelectorAll(selector);
+
+  elements.forEach((elem: HTMLElement | Element) => {
+    const params = {
+      min: 1,
+      max: 100,
+    } 
+
+    controller(elem, params)
+  });
 };
 
 export default initSlider;
