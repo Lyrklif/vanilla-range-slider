@@ -45,13 +45,13 @@ const controller = (htmlElement: HTMLElement | Element, params: TParams) => {
 
     input.setAttribute('value', `${valueWithStep}`)
   }
-  const stopGragging = () => {
+  const stopDragging = () => {
     document.removeEventListener('mousemove', moveKnob)
-    document.removeEventListener('mouseup', stopGragging)
+    document.removeEventListener('mouseup', stopDragging)
   }
   const startDragging = () => {
     document.addEventListener('mousemove', moveKnob)
-    document.addEventListener('mouseup', stopGragging)
+    document.addEventListener('mouseup', stopDragging)
   }
 
   knob.addEventListener('mousedown', startDragging)
