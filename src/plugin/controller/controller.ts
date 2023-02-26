@@ -94,6 +94,7 @@ const controller = (htmlElement: HTMLElement | Element, params: TParams) => {
   }
 
   knob.addEventListener('mousedown', startDragging)
+  bar.addEventListener('click', moveKnob)
   window.addEventListener('resize', initSlider)
 
  
