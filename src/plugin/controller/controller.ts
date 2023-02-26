@@ -68,6 +68,8 @@ const controller = (htmlElement: HTMLElement | Element, params: TParams) => {
 
   let value = min
   let wrapMargin = 0
+  let barWidth = 0
+  let barHeight = 0
   
   const wrap  = createWrap()
   const input  = createInput(value)
@@ -80,8 +82,8 @@ const controller = (htmlElement: HTMLElement | Element, params: TParams) => {
   const getKnobOffsetPercent = (knobOffset: number): number => {
     let offset = 0;
 
-    if (bar.clientWidth > 0) {
-      offset = knobOffset * 100 / bar.clientWidth;
+    if (barWidth > 0) {
+      offset = knobOffset * 100 / barWidth;
       offset = Math.min(Math.max(offset, 0), 100);
     }
 
@@ -114,6 +116,8 @@ const controller = (htmlElement: HTMLElement | Element, params: TParams) => {
 
   const initSlider = () => {
     wrapMargin = getWrapMargin(wrap)
+    barWidth = bar.clientWidth
+    barHeight = bar.clientHeight
   }
 
   knob.addEventListener('mousedown', startDragging)
