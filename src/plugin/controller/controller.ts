@@ -114,7 +114,7 @@ const controller = (htmlElement: HTMLElement | Element, params: TParams) => {
     document.addEventListener('mouseup', stopDragging)
   }
 
-  const initSlider = () => {
+  const setSliderSizes = () => {
     wrapMargin = getWrapMargin(wrap)
     barWidth = bar.clientWidth
     barHeight = bar.clientHeight
@@ -122,10 +122,10 @@ const controller = (htmlElement: HTMLElement | Element, params: TParams) => {
 
   knob.addEventListener('mousedown', startDragging)
   bar.addEventListener('click', moveKnob)
-  window.addEventListener('resize', initSlider)
+  window.addEventListener('resize', setSliderSizes)
 
   displaySlider(htmlElement, wrapSliderElements(wrap, [ knob, bar, input ]))
-  initSlider()
+  setSliderSizes()
 }
 
 export default controller
