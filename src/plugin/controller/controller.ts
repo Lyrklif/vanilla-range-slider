@@ -6,18 +6,18 @@ type TParams = {
   invertDirection?: boolean
 }
 
-const createWrap = (): HTMLElement => {
+const createWrap = (): HTMLDivElement => {
   const wrap = document.createElement('div');
   wrap.className = 'vanilla-slider-ts';
 
   return wrap;
 }
 
-const setKnobStyle = (knob: HTMLElement, offsetPercent: number) => {
-  knob.style.left = `${offsetPercent}%`
+const setKnobStyle = (knob: HTMLElement, offsetPercent: number, offsetPositionName: string) => {
+  knob.style.cssText = `${offsetPositionName}: ${offsetPercent}%`
 }
 
-const createInput = (value: number|string): HTMLElement => {
+const createInput = (value: number|string): HTMLInputElement => {
   const input = document.createElement('input')
   input.type = 'number';
   input.setAttribute('value', `${value}`);
@@ -26,22 +26,23 @@ const createInput = (value: number|string): HTMLElement => {
   return input;
 }
 
-const createBar = (): HTMLElement => {
+const createBar = (): HTMLDivElement => {
   const bar = document.createElement('div');
   bar.className = 'vanilla-slider-ts__bar';
 
   return bar;
 }
 
-const createKnob = (): HTMLElement => {
+const createKnob = (): HTMLButtonElement => {
   const knob = document.createElement('button');
   knob.className = 'vanilla-slider-ts__control';
 
   return knob;
 }
 
-const getWrapMargin = (wrap: HTMLElement): number => {
-  return wrap.getBoundingClientRect().left + window.scrollX;
+const getWrapMargin = (wrap: HTMLDivElement, side: string): number => {
+  // @ts-ignore
+  return wrap.getBoundingClientRect()[side] + window.scrollX;
 };
 
 const wrapSliderElements = (wrap: HTMLElement, children: Array<HTMLElement>) => {
@@ -55,6 +56,10 @@ const displaySlider = (htmlElement: HTMLElement | Element, wrap: HTMLElement) =>
 
 const setInputValue = (input: HTMLElement, value: number|string) => {
   input.setAttribute('value', `${value}`);
+}
+
+const getOffsetPositionName = (invertDirection: boolean): string => {
+  return invertDirection ? 'right' : 'left'
 }
  
 
@@ -70,21 +75,24 @@ const controller = (htmlElement: HTMLElement | Element, params: TParams) => {
   let wrapMargin = 0
   let barWidth = 0
   let barHeight = 0
-  
-  const wrap  = createWrap()
-  const input  = createInput(value)
-  const bar  = createBar()
-  const knob  = createKnob()
+  let sideName = getOffsetPositionName(invertDirection)
+  const MAX_PERCENT = 100
 
-  setKnobStyle(knob, 0)
+  
+  const wrap: HTMLDivElement  = createWrap()
+  const input: HTMLInputElement  = createInput(value)
+  const bar: HTMLDivElement  = createBar()
+  const knob: HTMLButtonElement  = createKnob()
+
+  setKnobStyle(knob, 0, sideName)
 
 
   const getKnobOffsetPercent = (knobOffset: number): number => {
     let offset = 0;
 
     if (barWidth > 0) {
-      offset = knobOffset * 100 / barWidth;
-      offset = Math.min(Math.max(offset, 0), 100);
+      offset = knobOffset * MAX_PERCENT / barWidth;
+      offset = Math.min(Math.max(offset, 0), MAX_PERCENT);
     }
 
     return offset;
@@ -94,7 +102,7 @@ const controller = (htmlElement: HTMLElement | Element, params: TParams) => {
     return getKnobOffsetPercent(knobOffset);
   }
   const calculateValueFromPercent = (persent: number, min: number, max: number, step: number): number => {
-    let value = persent * max / 100;
+    let value = persent * max / MAX_PERCENT;
     value = Math.round((value - min) / step) * step + min;
     return Number(value.toFixed(1));
   }
@@ -102,7 +110,7 @@ const controller = (htmlElement: HTMLElement | Element, params: TParams) => {
     const percent = calculateKnobOffsetPercent(e);
     const value = calculateValueFromPercent(percent, min, max, step);
 
-    setKnobStyle(knob, percent);
+    setKnobStyle(knob, percent, sideName);
     setInputValue(input, value);
   }
   const stopDragging = () => {
@@ -115,7 +123,7 @@ const controller = (htmlElement: HTMLElement | Element, params: TParams) => {
   }
 
   const setSliderSizes = () => {
-    wrapMargin = getWrapMargin(wrap)
+    wrapMargin = getWrapMargin(wrap, sideName)
     barWidth = bar.clientWidth
     barHeight = bar.clientHeight
   }
