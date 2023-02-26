@@ -5,6 +5,48 @@ type TParams = {
   step?: number
 }
 
+const createWrap = (): HTMLElement => {
+  const wrap = document.createElement('div')
+  wrap.setAttribute('class', 'vanilla-slider-ts')
+
+  return wrap
+}
+
+const createInput = (value: string|number): HTMLElement => {
+  const input = document.createElement('input')
+  input.setAttribute('type', 'number')
+  input.setAttribute('value', `${value}`)
+  input.setAttribute('class', 'vanilla-slider-ts__input')
+
+  return input
+}
+
+const createBar = (): HTMLElement  => {
+  const bar = document.createElement('div')
+  bar.setAttribute('class', 'vanilla-slider-ts__bar')
+
+  return bar
+}
+
+const createKnob = (): HTMLElement => {
+  const knob = document.createElement('button')
+  knob.setAttribute('class', 'vanilla-slider-ts__control')
+
+  return knob
+}
+
+const getWrapMargin = (wrap: HTMLElement): number => {
+  return wrap.getBoundingClientRect().left
+}
+
+const displaySlider = (htmlElement: HTMLElement | Element, wrap: HTMLElement, children: Array<HTMLElement>) => {
+  children.forEach(element => {
+    wrap.appendChild(element)
+  });
+
+  htmlElement.appendChild(wrap)
+}
+
 const controller = (htmlElement: HTMLElement | Element, params: TParams) => {
   const {
     min,
@@ -13,20 +55,13 @@ const controller = (htmlElement: HTMLElement | Element, params: TParams) => {
   } = params
 
   let value = min
-
-  const wrap = document.createElement('div')
-  wrap.setAttribute('class', 'vanilla-slider-ts')
-
-  const input = document.createElement('input')
-  input.setAttribute('type', 'number')
-  input.setAttribute('value', `${value}`)
-  input.setAttribute('class', 'vanilla-slider-ts__input')
+  let wrapMargin = 0
   
-  const bar = document.createElement('div')
-  bar.setAttribute('class', 'vanilla-slider-ts__bar')
-  
-  const knob = document.createElement('button')
-  knob.setAttribute('class', 'vanilla-slider-ts__control')
+  const wrap  = createWrap()
+  const input  = createInput(value)
+  const bar  = createBar()
+  const knob  = createKnob()
+
   knob.style.cssText = `left: ${0}%`
 
   const getKnobOffsetPercent = (knobOffset: number): number => {
@@ -36,7 +71,7 @@ const controller = (htmlElement: HTMLElement | Element, params: TParams) => {
     return left
   }
   const moveKnob = (e: MouseEvent) => {
-    let knobOffset = e.clientX - wrapLeft
+    let knobOffset = e.clientX - wrapMargin
     let left = getKnobOffsetPercent(knobOffset)
     knob.style.cssText = `left: ${left}%`
 
@@ -54,14 +89,16 @@ const controller = (htmlElement: HTMLElement | Element, params: TParams) => {
     document.addEventListener('mouseup', stopDragging)
   }
 
-  knob.addEventListener('mousedown', startDragging)
- 
-  wrap.appendChild(knob)
-  wrap.appendChild(bar)
-  wrap.appendChild(input)
-  htmlElement.appendChild(wrap)
+  const initSlider = () => {
+    wrapMargin = getWrapMargin(wrap)
+  }
 
-  const wrapLeft = wrap.getBoundingClientRect().left
+  knob.addEventListener('mousedown', startDragging)
+  window.addEventListener('resize', initSlider)
+
+ 
+  displaySlider(htmlElement, wrap, [ knob, bar, input ])
+  initSlider()
 }
 
 export default controller
