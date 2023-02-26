@@ -3,55 +3,67 @@ type TParams = {
   min: number
   max: number
   step?: number
+  invertDirection?: boolean
 }
 
 const createWrap = (): HTMLElement => {
-  const wrap = document.createElement('div')
-  wrap.setAttribute('class', 'vanilla-slider-ts')
+  const wrap = document.createElement('div');
+  wrap.className = 'vanilla-slider-ts';
 
-  return wrap
+  return wrap;
 }
 
-const createInput = (value: string|number): HTMLElement => {
+const setKnobStyle = (knob: HTMLElement, offsetPercent: number) => {
+  knob.style.left = `${offsetPercent}%`
+}
+
+const createInput = (value: number|string): HTMLElement => {
   const input = document.createElement('input')
-  input.setAttribute('type', 'number')
-  input.setAttribute('value', `${value}`)
-  input.setAttribute('class', 'vanilla-slider-ts__input')
+  input.type = 'number';
+  input.setAttribute('value', `${value}`);
+  input.className = 'vanilla-slider-ts__input';
 
-  return input
+  return input;
 }
 
-const createBar = (): HTMLElement  => {
-  const bar = document.createElement('div')
-  bar.setAttribute('class', 'vanilla-slider-ts__bar')
+const createBar = (): HTMLElement => {
+  const bar = document.createElement('div');
+  bar.className = 'vanilla-slider-ts__bar';
 
-  return bar
+  return bar;
 }
 
 const createKnob = (): HTMLElement => {
-  const knob = document.createElement('button')
-  knob.setAttribute('class', 'vanilla-slider-ts__control')
+  const knob = document.createElement('button');
+  knob.className = 'vanilla-slider-ts__control';
 
-  return knob
+  return knob;
 }
 
 const getWrapMargin = (wrap: HTMLElement): number => {
-  return wrap.getBoundingClientRect().left
+  return wrap.getBoundingClientRect().left + window.scrollX;
+};
+
+const wrapSliderElements = (wrap: HTMLElement, children: Array<HTMLElement>) => {
+  wrap.append(...children);
+  return wrap;
 }
 
-const displaySlider = (htmlElement: HTMLElement | Element, wrap: HTMLElement, children: Array<HTMLElement>) => {
-  children.forEach(element => {
-    wrap.appendChild(element)
-  });
-
-  htmlElement.appendChild(wrap)
+const displaySlider = (htmlElement: HTMLElement | Element, wrap: HTMLElement) => {
+  htmlElement.appendChild(wrap);
 }
+
+const setInputValue = (input: HTMLElement, value: number|string) => {
+  input.setAttribute('value', `${value}`);
+}
+ 
 
 const controller = (htmlElement: HTMLElement | Element, params: TParams) => {
   const {
     min,
     max,
     step = 1,
+    invertDirection = false,
   } = params
 
   let value = min
@@ -62,23 +74,34 @@ const controller = (htmlElement: HTMLElement | Element, params: TParams) => {
   const bar  = createBar()
   const knob  = createKnob()
 
-  knob.style.cssText = `left: ${0}%`
+  setKnobStyle(knob, 0)
+
 
   const getKnobOffsetPercent = (knobOffset: number): number => {
-    let left = knobOffset * 100 / bar.clientWidth
-    if (left < 0) left = 0
-    else if (left > 100) left = 100
-    return left
+    let offset = 0;
+
+    if (bar.clientWidth > 0) {
+      offset = knobOffset * 100 / bar.clientWidth;
+      offset = Math.min(Math.max(offset, 0), 100);
+    }
+
+    return offset;
+  }
+  const calculateKnobOffsetPercent = (e: MouseEvent): number => {
+    const knobOffset = e.clientX - wrapMargin;
+    return getKnobOffsetPercent(knobOffset);
+  }
+  const calculateValueFromPercent = (persent: number, min: number, max: number, step: number): number => {
+    let value = persent * max / 100;
+    value = Math.round((value - min) / step) * step + min;
+    return Number(value.toFixed(1));
   }
   const moveKnob = (e: MouseEvent) => {
-    let knobOffset = e.clientX - wrapMargin
-    let left = getKnobOffsetPercent(knobOffset)
-    knob.style.cssText = `left: ${left}%`
+    const percent = calculateKnobOffsetPercent(e);
+    const value = calculateValueFromPercent(percent, min, max, step);
 
-    value = left * max / 100
-    const valueWithStep = Number((Math.round((value - min) / step) * step + min).toFixed(1));
-
-    input.setAttribute('value', `${valueWithStep}`)
+    setKnobStyle(knob, percent);
+    setInputValue(input, value);
   }
   const stopDragging = () => {
     document.removeEventListener('mousemove', moveKnob)
@@ -97,8 +120,7 @@ const controller = (htmlElement: HTMLElement | Element, params: TParams) => {
   bar.addEventListener('click', moveKnob)
   window.addEventListener('resize', initSlider)
 
- 
-  displaySlider(htmlElement, wrap, [ knob, bar, input ])
+  displaySlider(htmlElement, wrapSliderElements(wrap, [ knob, bar, input ]))
   initSlider()
 }
 
