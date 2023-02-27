@@ -7,6 +7,10 @@ type TParams = {
   vertical?: boolean
 }
 
+const MAX_PERCENT: number = 100
+const MIN_PERCENT: number = 0
+
+
 const createWrap = (invert: boolean, vertical: boolean): HTMLDivElement => {
   const wrap = document.createElement('div');
   wrap.className = 'vanilla-slider-ts';
@@ -88,7 +92,6 @@ const controller = (htmlElement: HTMLElement | Element, params: TParams) => {
   let barWidth = 0
   let barHeight = 0
   let sideName = getSideName(invert, vertical)
-  const MAX_PERCENT = 100
 
   
   const wrap: HTMLDivElement  = createWrap(invert, vertical)
@@ -96,17 +99,17 @@ const controller = (htmlElement: HTMLElement | Element, params: TParams) => {
   const bar: HTMLDivElement  = createBar(invert, vertical)
   const knob: HTMLButtonElement  = createKnob(invert, vertical)
 
-  setKnobStyle(knob, 0, sideName)
+  setKnobStyle(knob, MIN_PERCENT, sideName)
 
 
   const getKnobOffsetPercent = (knobOffset: number, vertical: boolean): number => {
-    let offset = 0;
+    let offset = MIN_PERCENT;
     const size = vertical ? barHeight : barWidth;
 
-    if (size > 0) {
+    if (size > MIN_PERCENT) {
       offset = knobOffset * MAX_PERCENT / size;
-      offset = (vertical && !invert) || (!vertical && invert) ? 100 - offset : offset;
-      offset = Math.max(0, Math.min(offset, MAX_PERCENT));
+      offset = (vertical && !invert) || (!vertical && invert) ? MAX_PERCENT - offset : offset;
+      offset = Math.max(MIN_PERCENT, Math.min(offset, MAX_PERCENT));
     }
 
     return offset;
