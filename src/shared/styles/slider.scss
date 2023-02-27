@@ -1,6 +1,4 @@
 .vanilla-slider-ts {
-  --offset-1: 0;
-  --offset-2: 0;
   --size: 20px;
 
   position: relative;
@@ -20,21 +18,18 @@
     cursor: pointer;
     top: 0;
     transform: translateX(-50%);
-
-    &:first-of-type {
-      left: var(--offset-1);
-    }
-    &:last-of-type {
-      left: var(--offset-2);
+    
+    &.invert {
+      transform: translateX(50%);
     }
   }
   // screen reader only
   &__input {
-    //position: absolute;
-    //left: -10000px;
-    //top: auto;
-    //width: 1px;
-    //height: 1px;
-    //overflow: hidden;
+    // position: absolute;
+    // left: -10000px;
+    // top: auto;
+    // width: 1px;
+    // height: 1px;
+    // overflow: hidden;
   }
 }

@@ -1,12 +1,14 @@
 import controller from './controller/controller'
 
 const initSlider = (selector: string): void => {
-  const elements = document.querySelectorAll(selector);
+  const elements: NodeListOf<Element> = document.querySelectorAll(selector);
 
   elements.forEach((elem: HTMLElement | Element) => {
     const params = {
-      min: 1,
+      min: 0,
       max: 100,
+      step: 1,
+      invertDirection: true
     } 
 
     controller(elem, params)

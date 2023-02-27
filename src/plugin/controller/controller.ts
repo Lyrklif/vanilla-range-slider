@@ -6,9 +6,10 @@ type TParams = {
   invertDirection?: boolean
 }
 
-const createWrap = (): HTMLDivElement => {
+const createWrap = (invert: boolean): HTMLDivElement => {
   const wrap = document.createElement('div');
   wrap.className = 'vanilla-slider-ts';
+  if (invert) wrap.classList.add('invert');
 
   return wrap;
 }
@@ -17,32 +18,36 @@ const setKnobStyle = (knob: HTMLElement, offsetPercent: number, offsetPositionNa
   knob.style.cssText = `${offsetPositionName}: ${offsetPercent}%`
 }
 
-const createInput = (value: number|string): HTMLInputElement => {
+const createInput = (value: number|string, invert: boolean): HTMLInputElement => {
   const input = document.createElement('input')
   input.type = 'number';
   input.setAttribute('value', `${value}`);
   input.className = 'vanilla-slider-ts__input';
+  if (invert) input.classList.add('invert');
 
   return input;
 }
 
-const createBar = (): HTMLDivElement => {
+const createBar = (invert: boolean): HTMLDivElement => {
   const bar = document.createElement('div');
   bar.className = 'vanilla-slider-ts__bar';
+  if (invert) bar.classList.add('invert');
 
   return bar;
 }
 
-const createKnob = (): HTMLButtonElement => {
+const createKnob = (invert: boolean): HTMLButtonElement => {
   const knob = document.createElement('button');
   knob.className = 'vanilla-slider-ts__control';
+  if (invert) knob.classList.add('invert');
 
   return knob;
 }
 
 const getWrapMargin = (wrap: HTMLDivElement, side: string): number => {
   // @ts-ignore
-  return wrap.getBoundingClientRect()[side] + window.scrollX;
+  // return wrap.getBoundingClientRect()[side] + window.scrollX;
+  return wrap.getBoundingClientRect().left + window.scrollX;
 };
 
 const wrapSliderElements = (wrap: HTMLElement, children: Array<HTMLElement>) => {
@@ -79,10 +84,10 @@ const controller = (htmlElement: HTMLElement | Element, params: TParams) => {
   const MAX_PERCENT = 100
 
   
-  const wrap: HTMLDivElement  = createWrap()
-  const input: HTMLInputElement  = createInput(value)
-  const bar: HTMLDivElement  = createBar()
-  const knob: HTMLButtonElement  = createKnob()
+  const wrap: HTMLDivElement  = createWrap(invertDirection)
+  const input: HTMLInputElement  = createInput(value, invertDirection)
+  const bar: HTMLDivElement  = createBar(invertDirection)
+  const knob: HTMLButtonElement  = createKnob(invertDirection)
 
   setKnobStyle(knob, 0, sideName)
 
@@ -90,15 +95,20 @@ const controller = (htmlElement: HTMLElement | Element, params: TParams) => {
   const getKnobOffsetPercent = (knobOffset: number): number => {
     let offset = 0;
 
-    if (barWidth > 0) {
-      offset = knobOffset * MAX_PERCENT / barWidth;
-      offset = Math.min(Math.max(offset, 0), MAX_PERCENT);
+    if (barWidth <= 0 ) return offset
+
+    offset = knobOffset * MAX_PERCENT / barWidth;
+    
+    if (invertDirection) {
+      offset = 100 - offset
     }
+
+    offset = Math.min(Math.max(offset, 0), MAX_PERCENT);
 
     return offset;
   }
   const calculateKnobOffsetPercent = (e: MouseEvent): number => {
-    const knobOffset = e.clientX - wrapMargin;
+    let knobOffset = e.clientX - wrapMargin;
     return getKnobOffsetPercent(knobOffset);
   }
   const calculateValueFromPercent = (persent: number, min: number, max: number, step: number): number => {
