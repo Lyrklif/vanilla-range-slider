@@ -4,11 +4,23 @@
   position: relative;
   width: 100%;
   user-select: none;
+  margin-left: auto;
+  margin-right: auto;
+  
+  &.vertical {
+    width: auto;
+    height: 100%;
+  }
 
   &__bar {
     width: 100%;
     height: var(--size);
     background-color: cadetblue;
+
+    &.vertical {
+      height: 100%;
+      width: var(--size);
+    }
   }
   &__control {
     height: var(--size);
@@ -21,6 +33,18 @@
     
     &.invert {
       transform: translateX(50%);
+    }
+
+    &.vertical {
+      top: auto;
+      bottom: 0;
+      transform: translateY(50%);
+
+      &.invert {
+        top: 0;
+        bottom: auto;
+        transform: translateY(-50%);
+      }
     }
   }
   // screen reader only
