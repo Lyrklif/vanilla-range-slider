@@ -6,7 +6,14 @@ import {
   KNOB,
   VERTICAL,
   INVERT,
+  KNOB1,
+  KNOB2,
 } from '../constants/classes'
+
+import {
+  MAX_PERCENT,
+  MIN_PERCENT,
+} from '../constants/percents'
 
 
 type TParams = {
@@ -17,9 +24,6 @@ type TParams = {
   vertical?: boolean
   range?: boolean
 }
-
-const MAX_PERCENT: number = 100
-const MIN_PERCENT: number = 0
 
 
 const createWrap = (invert: boolean, vertical: boolean): HTMLDivElement => {
@@ -37,7 +41,7 @@ const setKnobStyle = (knob: HTMLButtonElement, percent: number, side: string) =>
 
 const createInput = (value: number|string, invert: boolean, vertical: boolean): HTMLInputElement => {
   const input = document.createElement('input')
-  input.type = 'number';
+  input.type = 'text';
   input.setAttribute('value', `${value}`);
   input.classList.add(INPUT);
   if (invert) input.classList.add(INVERT);
