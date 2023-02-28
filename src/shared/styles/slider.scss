@@ -1,4 +1,4 @@
-.vanilla-slider-ts {
+.range-slider {
   --size: 20px;
 
   position: relative;
@@ -22,7 +22,7 @@
       width: var(--size);
     }
   }
-  &__control {
+  &__knob {
     height: var(--size);
     width: var(--size);
     position: absolute;

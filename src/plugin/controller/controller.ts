@@ -1,4 +1,14 @@
 
+import {
+  WRAPPER,
+  INPUT,
+  BAR,
+  KNOB,
+  VERTICAL,
+  INVERT,
+} from '../constants/classes'
+
+
 type TParams = {
   min: number
   max: number
@@ -14,9 +24,9 @@ const MIN_PERCENT: number = 0
 
 const createWrap = (invert: boolean, vertical: boolean): HTMLDivElement => {
   const wrap = document.createElement('div');
-  wrap.className = 'vanilla-slider-ts';
-  if (invert) wrap.classList.add('invert');
-  if (vertical) wrap.classList.add('vertical');
+  wrap.classList.add(WRAPPER);
+  if (invert) wrap.classList.add(INVERT);
+  if (vertical) wrap.classList.add(VERTICAL);
 
   return wrap;
 }
@@ -29,27 +39,27 @@ const createInput = (value: number|string, invert: boolean, vertical: boolean): 
   const input = document.createElement('input')
   input.type = 'number';
   input.setAttribute('value', `${value}`);
-  input.className = 'vanilla-slider-ts__input';
-  if (invert) input.classList.add('invert');
-  if (vertical) input.classList.add('vertical');
+  input.classList.add(INPUT);
+  if (invert) input.classList.add(INVERT);
+  if (vertical) input.classList.add(VERTICAL);
 
   return input;
 }
 
 const createBar = (invert: boolean, vertical: boolean): HTMLDivElement => {
   const bar = document.createElement('div');
-  bar.className = 'vanilla-slider-ts__bar';
-  if (invert) bar.classList.add('invert');
-  if (vertical) bar.classList.add('vertical');
+  bar.classList.add(BAR);
+  if (invert) bar.classList.add(INVERT);
+  if (vertical) bar.classList.add(VERTICAL);
 
   return bar;
 }
 
 const createKnob = (invert: boolean, vertical: boolean): HTMLButtonElement => {
   const knob = document.createElement('button');
-  knob.className = 'vanilla-slider-ts__control';
-  if (invert) knob.classList.add('invert');
-  if (vertical) knob.classList.add('vertical');
+  knob.classList.add(KNOB);
+  if (invert) knob.classList.add(INVERT);
+  if (vertical) knob.classList.add(VERTICAL);
 
   return knob;
 }
