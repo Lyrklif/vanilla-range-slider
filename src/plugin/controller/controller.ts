@@ -5,6 +5,7 @@ type TParams = {
   step?: number
   invert?: boolean
   vertical?: boolean
+  range?: boolean
 }
 
 const MAX_PERCENT: number = 100
@@ -85,9 +86,11 @@ const controller = (htmlElement: HTMLElement | Element, params: TParams) => {
     step = 1,
     invert = false,
     vertical = false,
+    range = false,
   } = params
 
   let value = min
+  let value2 = max
   let wrapMargin = 0
   let barWidth = 0
   let barHeight = 0
@@ -96,8 +99,10 @@ const controller = (htmlElement: HTMLElement | Element, params: TParams) => {
   
   const wrap: HTMLDivElement  = createWrap(invert, vertical)
   const input: HTMLInputElement  = createInput(value, invert, vertical)
+  const input2: HTMLInputElement  = createInput(value2, invert, vertical)
   const bar: HTMLDivElement  = createBar(invert, vertical)
   const knob: HTMLButtonElement  = createKnob(invert, vertical)
+  const knob2: HTMLButtonElement  = createKnob(invert, vertical)
 
   setKnobStyle(knob, MIN_PERCENT, sideName)
 
@@ -158,7 +163,8 @@ const controller = (htmlElement: HTMLElement | Element, params: TParams) => {
   bar.addEventListener('click', moveKnob)
   window.addEventListener('resize', setSliderSizes)
 
-  displaySlider(htmlElement, wrapSliderElements(wrap, [ knob, bar, input ]))
+  const children = range ? [ knob, knob2, bar, input, input2 ] : [ knob, bar, input ]
+  displaySlider(htmlElement, wrapSliderElements(wrap, children))
   setSliderSizes()
 }
 

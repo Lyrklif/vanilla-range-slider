@@ -8,12 +8,14 @@ window.addEventListener('load', () => {
     min: 0,
     max: 100,
     step: 1,
+    range: true,
   } 
   const params2 = {
     min: 0,
     max: 100,
     step: 1,
     vertical: true,
+    range: true,
   } 
 
   initSlider('#horizontal-slider', params1);
