@@ -1,5 +1,5 @@
 .range-slider {
-  --size: 20px;
+  $knobSize: 20px;
 
   position: relative;
   width: 100%;
@@ -14,19 +14,19 @@
 
   &__bar {
     width: 100%;
-    height: var(--size);
-    background-color: cadetblue;
+    height: $knobSize;
+    background-color: lightgray;
 
     &.vertical {
       height: 100%;
-      width: var(--size);
+      width: $knobSize;
     }
   }
   &__knob {
-    height: var(--size);
-    width: var(--size);
+    height: $knobSize;
+    width: $knobSize;
     position: absolute;
-    background-color: coral;
+    background-color: grey;
     cursor: pointer;
     top: 0;
     transform: translateX(-50%);
