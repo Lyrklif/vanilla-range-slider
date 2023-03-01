@@ -8,7 +8,7 @@ type TContainerProps = {
 
 class Container {
   #props: TContainerProps;
-  readonly #container: HTMLDivElement;
+  #container: HTMLDivElement;
 
   constructor(props: TContainerProps) {
     this.#props = props;
@@ -20,21 +20,24 @@ class Container {
   }
 
   getMargin(): number {
+    const { vertical } = this.#props;
     const rect = this.#container.getBoundingClientRect();
-    const scrollOffset = this.#props.vertical ? window.scrollY : window.scrollX;
+    const scrollOffset = vertical ? window.scrollY : window.scrollX;
 
-    return rect[this.#props.vertical ? 'top' : 'left'] + scrollOffset;
+    return rect[vertical ? 'top' : 'left'] + scrollOffset;
   }
 
   #create(): HTMLDivElement {
-    const wrap = document.createElement('div');
-    wrap.classList.add(WRAPPER);
-    if (this.#props.invert) wrap.classList.add(INVERT);
-    if (this.#props.vertical) wrap.classList.add(VERTICAL);
-    if (this.#props.classes) wrap.classList.add(this.#props.classes);
+    const { invert, vertical, classes } = this.#props;
+    const container = document.createElement('div');
+    container.classList.add(WRAPPER);
+    if (invert) container.classList.add(INVERT);
+    if (vertical) container.classList.add(VERTICAL);
+    if (classes) container.classList.add(classes);
 
-    return wrap;
+    return container;
   }
 }
+
 
 export default Container;

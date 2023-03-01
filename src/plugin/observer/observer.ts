@@ -1,31 +1,31 @@
-type TSubscribeFn = (value: any) => void;
+type TSubscriberFn = (value: any) => void;
 
-type TSubscribe = {
+type TSubscriber = {
   name: string;
-  fn: TSubscribeFn;
+  fn: TSubscriberFn;
 };
 
 class Observer {
-  #subscribers: Array<TSubscribe>;
+  #subscribers: Array<TSubscriber>;
 
   constructor() {
     this.#subscribers = [];
   }
 
-  subscribe(name: string, fn: TSubscribeFn): void {
+  subscribe(name: string, fn: TSubscriberFn): void {
     this.#subscribers.push({ name, fn });
   }
 
-  unsubscribe(name: string, fn: TSubscribeFn): void {
-    this.#subscribers = this.#subscribers.filter((subscribe) => {
-      return !(subscribe.fn === fn && subscribe.name === name);
+  unsubscribe(name: string, fn: TSubscriberFn): void {
+    this.#subscribers = this.#subscribers.filter((subscriber) => {
+      return !(subscriber.fn === fn && subscriber.name === name);
     });
   }
 
   notify(name: string, data: any): void {
-    this.#subscribers.forEach((subscribe) => {
-      if (subscribe.name === name) subscribe.fn(data);
-    });
+    this.#subscribers
+      .filter((subscriber) => subscriber.name === name)
+      .forEach((subscriber) => subscriber.fn(data));
   }
 }
 

@@ -7,7 +7,7 @@ type TInputProps = {
 
 class Input {
   #props: TInputProps;
-  readonly #input: HTMLInputElement;
+  #input: HTMLInputElement;
 
   constructor(props: TInputProps) {
     this.#props = props;

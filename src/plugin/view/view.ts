@@ -21,14 +21,14 @@ type TViews = {
 };
 
 class View extends Observer {
-  readonly #props;
-  readonly #views: TViews;
+  #props;
+  #views: TViews;
   #parentHTML: HTMLElement | Element;
-  readonly #boundMoveHandlerFrom: (event: MouseEvent) => void;
-  readonly #boundMoveHandlerTo: (event: MouseEvent) => void;
-  readonly #boundStopDragging: () => void;
-  readonly #boundStartDraggingFrom: (event: MouseEvent) => void;
-  readonly #boundStartDraggingTo: (event: MouseEvent) => void;
+  #boundMoveHandlerFrom: (event: MouseEvent) => void;
+  #boundMoveHandlerTo: (event: MouseEvent) => void;
+  #boundStopDragging: () => void;
+  #boundStartDraggingFrom: (event: MouseEvent) => void;
+  #boundStartDraggingTo: (event: MouseEvent) => void;
 
   constructor(parentHTML: HTMLElement | Element, props: TSliderProps | any) {
     super();

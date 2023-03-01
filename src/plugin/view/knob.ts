@@ -8,7 +8,7 @@ type TKnobProps = {
 
 class Knob {
   #props: TKnobProps;
-  readonly #knob: HTMLButtonElement;
+  #knob: HTMLButtonElement;
 
   constructor(props: TKnobProps) {
     this.#props = props;
@@ -20,7 +20,8 @@ class Knob {
   }
 
   setStyle(percent: number): void {
-    this.#knob.style.cssText = `${this.#getSide()}: ${percent}%`;
+    const side = this.#getSide();
+    this.#knob.style[side] = `${percent}%`;
   }
 
   #create(): HTMLButtonElement {

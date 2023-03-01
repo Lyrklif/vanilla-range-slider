@@ -9,11 +9,10 @@ import type { TSliderProps } from './types';
 class Controller extends Observer {
   #model: Model;
   #view: View;
-
-  readonly #boundUpdateSizes: () => void;
-  readonly #boundMoveKnob: (event: MouseEvent) => { percent: number; value: number };
-  readonly #boundMoveKnobTo: (event: MouseEvent, knobName?: string) => void;
-  readonly #boundMoveKnobFrom: (event: MouseEvent, knobName?: string) => void;
+  #boundUpdateSizes: () => void;
+  #boundMoveKnob: (event: MouseEvent) => { percent: number; value: number };
+  #boundMoveKnobTo: (event: MouseEvent, knobName?: string) => void;
+  #boundMoveKnobFrom: (event: MouseEvent, knobName?: string) => void;
 
   constructor(parentHTML: HTMLElement | Element, props: TSliderProps) {
     super();

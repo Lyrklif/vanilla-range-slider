@@ -8,31 +8,29 @@ type TBarProps = {
 
 class Bar {
   #props: TBarProps;
-  readonly #bar: HTMLDivElement;
+  #bar: HTMLDivElement;
 
   constructor(props: TBarProps) {
     this.#props = props;
     this.#bar = this.#create();
   }
 
-  getHTML(): HTMLDivElement {
+  public getHTML(): HTMLDivElement {
     return this.#bar;
   }
 
-  getSize(): { width: number; height: number } {
-    return {
-      width: this.getHTML().clientWidth,
-      height: this.getHTML().clientHeight,
-    };
+  public getSize(): { width: number; height: number } {
+    const { clientWidth: width, clientHeight: height } = this.#bar;
+    return { width, height };
   }
 
   #create(): HTMLDivElement {
+    const { invert, vertical, classes } = this.#props;
     const bar = document.createElement('div');
     bar.classList.add(BAR);
-    if (this.#props.invert) bar.classList.add(INVERT);
-    if (this.#props.vertical) bar.classList.add(VERTICAL);
-    if (this.#props.classes) bar.classList.add(this.#props.classes);
-
+    if (invert) bar.classList.add(INVERT);
+    if (vertical) bar.classList.add(VERTICAL);
+    if (classes) bar.classList.add(classes);
     return bar;
   }
 }
