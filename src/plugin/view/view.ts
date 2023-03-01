@@ -24,17 +24,22 @@ class View extends Observer {
   readonly #props;
   readonly #views: TViews;
   #parentHTML: HTMLElement | Element;
+  #boundMoveHandler: (event: MouseEvent) => void;
+  #boundStopDragging: () => void;
 
   constructor(parentHTML: HTMLElement | Element, props: TSliderProps | any) {
     super();
-
+    
     this.#props = props;
     this.#parentHTML = parentHTML;
     this.#views = this.#create();
 
+    this.#boundMoveHandler = this.#moveHandler.bind(this);
+    this.#boundStopDragging = this.#stopDragging.bind(this);
+
     this.#display();
     window.addEventListener('resize', this.#resizeHandler.bind(this));
-    this.#views.bar.getHTML().addEventListener('click', this.#moveHandler.bind(this));
+    this.#views.bar.getHTML().addEventListener('click', this.#boundMoveHandler);
     this.#views.from.knob.getHTML().addEventListener('mousedown', this.#startDragging.bind(this));
   }
 
@@ -79,13 +84,12 @@ class View extends Observer {
     this.#parentHTML.appendChild(container.getHTML());
   }
   #stopDragging(): void {
-    document.removeEventListener('mousemove', this.#moveHandler.bind(this));
-    document.removeEventListener('mouseup', this.#stopDragging.bind(this));
+    document.removeEventListener('mousemove', this.#boundMoveHandler);
+    document.removeEventListener('mouseup', this.#boundStopDragging);
   }
   #startDragging(): void {
-    this.#stopDragging();
-    document.addEventListener('mousemove', this.#moveHandler.bind(this));
-    document.addEventListener('mouseup', this.#stopDragging.bind(this));
+    document.addEventListener('mousemove', this.#boundMoveHandler);
+    document.addEventListener('mouseup', this.#boundStopDragging);
   }
   #moveHandler(event: MouseEvent) {
     this.notify('onMouseMove', event);

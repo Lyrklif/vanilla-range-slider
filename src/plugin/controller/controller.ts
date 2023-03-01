@@ -10,6 +10,9 @@ class Controller extends Observer {
   #model: Model;
   #view: View;
 
+  #boundMoveKnob: (event: MouseEvent) => void;
+  #boundUpdateSizes: () => void;
+
   constructor(parentHTML: HTMLElement | Element, props: TSliderProps) {
     super();
 
@@ -22,10 +25,13 @@ class Controller extends Observer {
       to: this.#model.getToControlState(),
     });
 
-    this.#view.subscribe('onResize', this.#updateSizes.bind(this));
-    this.#view.subscribe('onMouseMove', this.#moveKnob.bind(this));
+    this.#boundMoveKnob = this.#moveKnob.bind(this);
+    this.#boundUpdateSizes = this.#updateSizes.bind(this);
 
-    this.#updateSizes();
+    this.#view.subscribe('onResize', this.#boundUpdateSizes);
+    this.#view.subscribe('onMouseMove', this.#boundMoveKnob);
+
+    this.#boundUpdateSizes();
   }
 
   #updateSizes(): void {
