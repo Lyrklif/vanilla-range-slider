@@ -55,6 +55,8 @@ class Controller extends Observer {
     this.#model.setFromControlState({ value, percent });
   }
   #moveKnobTo(event: MouseEvent) {
+    if (!this.#view.getTo()) return;
+    
     const result = this.#boundMoveKnob(event);
     const { percent, value } = result;
 
