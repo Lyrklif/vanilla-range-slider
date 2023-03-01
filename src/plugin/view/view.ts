@@ -24,8 +24,11 @@ class View extends Observer {
   readonly #props;
   readonly #views: TViews;
   #parentHTML: HTMLElement | Element;
-  #boundMoveHandler: (event: MouseEvent) => void;
-  #boundStopDragging: () => void;
+  readonly #boundMoveHandlerFrom: (event: MouseEvent) => void;
+  readonly #boundMoveHandlerTo: (event: MouseEvent) => void;
+  readonly #boundStopDragging: () => void;
+  readonly #boundStartDraggingFrom: (event: MouseEvent) => void;
+  readonly #boundStartDraggingTo: (event: MouseEvent) => void;
 
   constructor(parentHTML: HTMLElement | Element, props: TSliderProps | any) {
     super();
@@ -34,13 +37,17 @@ class View extends Observer {
     this.#parentHTML = parentHTML;
     this.#views = this.#create();
 
-    this.#boundMoveHandler = this.#moveHandler.bind(this);
+    this.#boundMoveHandlerFrom = this.#moveHandlerFrom.bind(this);
+    this.#boundMoveHandlerTo = this.#moveHandlerTo.bind(this);
     this.#boundStopDragging = this.#stopDragging.bind(this);
+    this.#boundStartDraggingFrom = this.#startDraggingFrom.bind(this);
+    this.#boundStartDraggingTo = this.#startDraggingTo.bind(this);
 
     this.#display();
     window.addEventListener('resize', this.#resizeHandler.bind(this));
-    this.#views.bar.getHTML().addEventListener('click', this.#boundMoveHandler);
-    this.#views.from.knob.getHTML().addEventListener('mousedown', this.#startDragging.bind(this));
+    this.#views.bar.getHTML().addEventListener('click', this.#boundMoveHandlerFrom);
+    this.#views.from.knob.getHTML().addEventListener('mousedown', this.#boundStartDraggingFrom);
+    this.#views.to.knob.getHTML().addEventListener('mousedown', this.#boundStartDraggingTo);
   }
 
   getFrom(): { knob: Knob; input: Input } {
@@ -75,7 +82,7 @@ class View extends Observer {
     const { container, bar, from, to } = this.#views;
     const { range } = this.#props;
 
-    const children = [from.knob.getHTML(), bar.getHTML(), from.input.getHTML()];
+    const children = [bar.getHTML(), from.knob.getHTML(), from.input.getHTML()];
     if (range) {
       children.push(to.input.getHTML());
       children.push(to.knob.getHTML());
@@ -84,15 +91,23 @@ class View extends Observer {
     this.#parentHTML.appendChild(container.getHTML());
   }
   #stopDragging(): void {
-    document.removeEventListener('mousemove', this.#boundMoveHandler);
+    document.removeEventListener('mousemove', this.#boundMoveHandlerFrom);
+    document.removeEventListener('mousemove', this.#boundMoveHandlerTo);
     document.removeEventListener('mouseup', this.#boundStopDragging);
   }
-  #startDragging(): void {
-    document.addEventListener('mousemove', this.#boundMoveHandler);
+  #startDraggingFrom(): void {
+    document.addEventListener('mousemove', this.#boundMoveHandlerFrom);
     document.addEventListener('mouseup', this.#boundStopDragging);
   }
-  #moveHandler(event: MouseEvent) {
-    this.notify('onMouseMove', event);
+  #startDraggingTo(): void {
+    document.addEventListener('mousemove', this.#boundMoveHandlerTo);
+    document.addEventListener('mouseup', this.#boundStopDragging);
+  }
+  #moveHandlerFrom(event: MouseEvent) {
+    this.notify('onMouseMoveFrom', event);
+  }
+  #moveHandlerTo(event: MouseEvent) {
+    this.notify('onMouseMoveTo', event);
   }
   #resizeHandler(event: Event) {
     this.notify('onResize', event);

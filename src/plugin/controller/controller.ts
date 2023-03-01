@@ -10,8 +10,10 @@ class Controller extends Observer {
   #model: Model;
   #view: View;
 
-  readonly #boundMoveKnob: (event: MouseEvent) => void;
   readonly #boundUpdateSizes: () => void;
+  readonly #boundMoveKnob: (event: MouseEvent) => { percent: number; value: number };
+  readonly #boundMoveKnobTo: (event: MouseEvent, knobName?: string) => void;
+  readonly #boundMoveKnobFrom: (event: MouseEvent, knobName?: string) => void;
 
   constructor(parentHTML: HTMLElement | Element, props: TSliderProps) {
     super();
@@ -26,10 +28,13 @@ class Controller extends Observer {
     });
 
     this.#boundMoveKnob = this.#moveKnob.bind(this);
+    this.#boundMoveKnobFrom = this.#moveKnobFrom.bind(this);
+    this.#boundMoveKnobTo = this.#moveKnobTo.bind(this);
     this.#boundUpdateSizes = this.#updateSizes.bind(this);
 
     this.#view.subscribe('onResize', this.#boundUpdateSizes);
-    this.#view.subscribe('onMouseMove', this.#boundMoveKnob);
+    this.#view.subscribe('onMouseMoveFrom', this.#boundMoveKnobFrom);
+    this.#view.subscribe('onMouseMoveTo', this.#boundMoveKnobTo);
 
     this.#boundUpdateSizes();
   }
@@ -42,7 +47,24 @@ class Controller extends Observer {
     this.#model.setBarState({ height, width });
   }
 
-  #moveKnob(event: MouseEvent): void {
+  #moveKnobFrom(event: MouseEvent) {
+    const result = this.#boundMoveKnob(event);
+    const { percent, value } = result;
+
+    this.#view.getFrom().knob.setStyle(percent);
+    this.#view.getFrom().input.setValue(value);
+    this.#model.setFromControlState({ value, percent });
+  }
+  #moveKnobTo(event: MouseEvent) {
+    const result = this.#boundMoveKnob(event);
+    const { percent, value } = result;
+
+    this.#view.getTo().knob.setStyle(percent);
+    this.#view.getTo().input.setValue(value);
+    this.#model.setToControlState({ value, percent });
+  }
+
+  #moveKnob(event: MouseEvent): { percent: number; value: number } {
     const { vertical, min, max, step, invert } = this.#model.getSettings();
     const bar = this.#model.getBarState();
 
@@ -70,9 +92,7 @@ class Controller extends Observer {
     const percent = calculateKnobOffsetPercent(event);
     const value = calculateValueFromPercent(percent);
 
-    this.#view.getFrom().knob.setStyle(percent);
-    this.#view.getFrom().input.setValue(value);
-    this.#model.setFromControlState({ value, percent });
+    return { percent, value };
   }
 }
 

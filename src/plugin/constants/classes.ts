@@ -1,22 +1,10 @@
+const WRAPPER = 'range-slider';
+const INPUT = `${WRAPPER}__input`;
+const BAR = `${WRAPPER}__bar`;
+const KNOB = `${WRAPPER}__knob`;
+const KNOB1 = `${KNOB}--from`;
+const KNOB2 = `${KNOB}--to`;
+const VERTICAL = `vertical`;
+const INVERT = `invert`;
 
-
-const WRAPPER: string = 'range-slider'
-const INPUT: string = `${WRAPPER}__input`
-const BAR: string = `${WRAPPER}__bar`
-const KNOB: string = `${WRAPPER}__knob`
-const KNOB1: string = `${KNOB}--first`
-const KNOB2: string = `${KNOB}--second`
-const VERTICAL: string = `vertical`
-const INVERT: string = `invert`
-
-
-export {
-  WRAPPER,
-  INPUT,
-  BAR,
-  KNOB,
-  VERTICAL,
-  INVERT,
-  KNOB1,
-  KNOB2,
-}
+export { WRAPPER, INPUT, BAR, KNOB, VERTICAL, INVERT, KNOB1, KNOB2 };
