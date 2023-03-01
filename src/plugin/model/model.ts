@@ -3,12 +3,11 @@ import type { TSliderState, TContainer, TBar, TControl } from './types';
 
 class Model {
   #settings: TSliderSettings;
-
   #state: TSliderState;
 
   constructor(settings: TSliderProps) {
     this.#settings = {
-      min: settings.min || 0,
+      min: settings.min ?? 0,
       max: settings.max,
       step: settings.step || 1,
       invert: !!settings.invert,
