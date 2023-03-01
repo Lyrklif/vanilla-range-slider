@@ -37,7 +37,6 @@ class Controller extends Observer {
   }
 
   #moveKnob(event: MouseEvent): void {
-    console.log('TTT event', event);
     const { vertical, min, max, step, invert } = this.#model.getSettings();
     const bar = this.#model.getBarState();
 
