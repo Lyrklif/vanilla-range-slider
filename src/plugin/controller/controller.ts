@@ -1,185 +1,73 @@
+import { MAX_PERCENT, MIN_PERCENT } from '../constants/percents';
 
-import {
-  WRAPPER,
-  INPUT,
-  BAR,
-  KNOB,
-  VERTICAL,
-  INVERT,
-  KNOB1,
-  KNOB2,
-} from '../constants/classes'
+import Model from '../model/model';
+import View from '../view/View';
+import Observer from '../observer/observer';
 
-import {
-  MAX_PERCENT,
-  MIN_PERCENT,
-} from '../constants/percents'
+import type { TSliderProps } from './types';
 
+class Controller extends Observer {
+  #model: Model;
+  #view: View;
 
-type TParams = {
-  min: number
-  max: number
-  step?: number
-  invert?: boolean
-  vertical?: boolean
-  range?: boolean
-}
+  constructor(parentHTML: HTMLElement | Element, props: TSliderProps) {
+    super();
 
+    this.#model = new Model(props);
+    this.#view = new View(parentHTML, {
+      invert: this.#model.getSettings().invert,
+      vertical: this.#model.getSettings().vertical,
+      range: this.#model.getSettings().range,
+      from: this.#model.getFromControlState(),
+      to: this.#model.getToControlState(),
+    });
 
-const createWrap = (invert: boolean, vertical: boolean): HTMLDivElement => {
-  const wrap = document.createElement('div');
-  wrap.classList.add(WRAPPER);
-  if (invert) wrap.classList.add(INVERT);
-  if (vertical) wrap.classList.add(VERTICAL);
+    this.#view.subscribe('onResize', this.#updateSizes.bind(this));
+    this.#view.subscribe('onMouseMove', this.#moveKnob.bind(this));
 
-  return wrap;
-}
-
-const setKnobStyle = (knob: HTMLButtonElement, percent: number, side: string) => {
-  knob.style.cssText = `${side}: ${percent}%`
-}
-
-const createInput = (value: number|string, invert: boolean, vertical: boolean): HTMLInputElement => {
-  const input = document.createElement('input')
-  input.type = 'text';
-  input.setAttribute('value', `${value}`);
-  input.classList.add(INPUT);
-  if (invert) input.classList.add(INVERT);
-  if (vertical) input.classList.add(VERTICAL);
-
-  return input;
-}
-
-const createBar = (invert: boolean, vertical: boolean): HTMLDivElement => {
-  const bar = document.createElement('div');
-  bar.classList.add(BAR);
-  if (invert) bar.classList.add(INVERT);
-  if (vertical) bar.classList.add(VERTICAL);
-
-  return bar;
-}
-
-const createKnob = (invert: boolean, vertical: boolean): HTMLButtonElement => {
-  const knob = document.createElement('button');
-  knob.classList.add(KNOB);
-  if (invert) knob.classList.add(INVERT);
-  if (vertical) knob.classList.add(VERTICAL);
-
-  return knob;
-}
-
-const getWrapMargin = (wrap: HTMLDivElement, vertical: boolean): number => {
-  const rect = wrap.getBoundingClientRect();
-  const scrollOffset = vertical ? window.scrollY : window.scrollX;
-
-  return rect[vertical ? 'top' : 'left'] + scrollOffset;
-};
-
-const wrapSliderElements = (wrap: HTMLElement, children: Array<HTMLElement>) => {
-  wrap.append(...children);
-  return wrap;
-}
-
-const displaySlider = (htmlElement: HTMLElement | Element, wrap: HTMLElement) => {
-  htmlElement.appendChild(wrap);
-}
-
-const setInputValue = (input: HTMLElement, value: number|string) => {
-  input.setAttribute('value', `${value}`);
-}
-
-const getSideName = (invert: boolean, vertical: boolean): string => {
-  return invert ? (vertical ? 'top' : 'right') : (vertical ? 'bottom' : 'left')
-}
- 
-
-const controller = (htmlElement: HTMLElement | Element, params: TParams) => {
-  const {
-    min,
-    max,
-    step = 1,
-    invert = false,
-    vertical = false,
-    range = false,
-  } = params
-
-  let value = min
-  let value2 = max
-  let wrapMargin = 0
-  let barWidth = 0
-  let barHeight = 0
-  let sideName = getSideName(invert, vertical)
-
-  
-  const wrap: HTMLDivElement  = createWrap(invert, vertical)
-  const input: HTMLInputElement  = createInput(value, invert, vertical)
-  const input2: HTMLInputElement  = createInput(value2, invert, vertical)
-  const bar: HTMLDivElement  = createBar(invert, vertical)
-  const knob: HTMLButtonElement  = createKnob(invert, vertical)
-  const knob2: HTMLButtonElement  = createKnob(invert, vertical)
-
-  setKnobStyle(knob, MIN_PERCENT, sideName)
-
-
-  const getKnobOffsetPercent = (knobOffset: number, vertical: boolean): number => {
-    let offset = MIN_PERCENT;
-    const size = vertical ? barHeight : barWidth;
-
-    if (size > MIN_PERCENT) {
-      offset = knobOffset * MAX_PERCENT / size;
-      offset = (vertical && !invert) || (!vertical && invert) ? MAX_PERCENT - offset : offset;
-      offset = Math.max(MIN_PERCENT, Math.min(offset, MAX_PERCENT));
-    }
-
-    return offset;
+    this.#updateSizes();
   }
 
-  
-  const calculateKnobOffsetPercent = (e: MouseEvent, vertical: boolean): number => {
-    const size: number = vertical ? e.clientY : e.clientX
-    const knobOffset: number = size - wrapMargin;
-    return getKnobOffsetPercent(knobOffset, vertical);
+  #updateSizes(): void {
+    const { height, width } = this.#view.getBar().getSize();
+    const margin = this.#view.getContainer().getMargin();
+
+    this.#model.setContainerState({ margin });
+    this.#model.setBarState({ height, width });
   }
 
-  
-  const calculateValueFromPercent = (persent: number, min: number, max: number, step: number): number => {
-    let value = persent * max / MAX_PERCENT;
-    value = Math.round((value - min) / step) * step + min;
-    return Number(value.toFixed(1));
+  #moveKnob(event: MouseEvent): void {
+    console.log('TTT event', event);
+    const { vertical, min, max, step, invert } = this.#model.getSettings();
+    const bar = this.#model.getBarState();
+
+    const getKnobOffsetPercent = (knobOffset: number): number => {
+      let offset = MIN_PERCENT;
+      const size = vertical ? bar.height : bar.width;
+      if (size > MIN_PERCENT) {
+        offset = (knobOffset * MAX_PERCENT) / size;
+        offset = (vertical && !invert) || (!vertical && invert) ? MAX_PERCENT - offset : offset;
+        offset = Math.max(MIN_PERCENT, Math.min(offset, MAX_PERCENT));
+      }
+      return offset;
+    };
+    const calculateKnobOffsetPercent = (event: MouseEvent): number => {
+      const size: number = vertical ? event.clientY : event.clientX;
+      const knobOffset: number = size - this.#model.getContainerState().margin;
+      return getKnobOffsetPercent(knobOffset);
+    };
+    const calculateValueFromPercent = (percent: number): number => {
+      let value = (percent * max) / MAX_PERCENT;
+      value = Math.round((value - min) / step) * step + min;
+      return Number(value.toFixed(1));
+    };
+
+    const percent = calculateKnobOffsetPercent(event);
+    const value = calculateValueFromPercent(percent);
+
+    this.#view.getFrom().knob.setStyle(percent);
+    this.#model.setFromControlState({ value, percent });
   }
-
-  
-  const moveKnob = (e: MouseEvent) => {
-    const percent = calculateKnobOffsetPercent(e, vertical);
-    const value = calculateValueFromPercent(percent, min, max, step);
-
-    setKnobStyle(knob, percent, sideName);
-    setInputValue(input, value);
-  }
-
-  
-  const stopDragging = () => {
-    document.removeEventListener('mousemove', moveKnob)
-    document.removeEventListener('mouseup', stopDragging)
-  }
-  const startDragging = () => {
-    document.addEventListener('mousemove', moveKnob)
-    document.addEventListener('mouseup', stopDragging)
-  }
-
-  const setSliderSizes = () => {
-    wrapMargin = getWrapMargin(wrap, vertical)
-    barWidth = bar.clientWidth
-    barHeight = bar.clientHeight
-  }
-
-  knob.addEventListener('mousedown', startDragging)
-  bar.addEventListener('click', moveKnob)
-  window.addEventListener('resize', setSliderSizes)
-
-  const children = range ? [ knob, knob2, bar, input, input2 ] : [ knob, bar, input ]
-  displaySlider(htmlElement, wrapSliderElements(wrap, children))
-  setSliderSizes()
 }
 
-export default controller
+export default Controller;
