@@ -29,7 +29,7 @@ class View extends Observer {
 
   constructor(parentHTML: HTMLElement | Element, props: TSliderProps | any) {
     super();
-    
+
     this.#props = props;
     this.#parentHTML = parentHTML;
     this.#views = this.#create();

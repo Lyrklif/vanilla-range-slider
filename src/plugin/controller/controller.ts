@@ -10,8 +10,8 @@ class Controller extends Observer {
   #model: Model;
   #view: View;
 
-  #boundMoveKnob: (event: MouseEvent) => void;
-  #boundUpdateSizes: () => void;
+  readonly #boundMoveKnob: (event: MouseEvent) => void;
+  readonly #boundUpdateSizes: () => void;
 
   constructor(parentHTML: HTMLElement | Element, props: TSliderProps) {
     super();
@@ -71,6 +71,7 @@ class Controller extends Observer {
     const value = calculateValueFromPercent(percent);
 
     this.#view.getFrom().knob.setStyle(percent);
+    this.#view.getFrom().input.setValue(value);
     this.#model.setFromControlState({ value, percent });
   }
 }
