@@ -1,11 +1,11 @@
-import Container from './children/container/container';
-import Bar from './children/bar/bar';
-import Knob from './children/knob/knob';
-import Input from './children/input/input';
+import Container from './atoms/container/container';
+import Line from './atoms/line/line';
+import Knob from './atoms/knob/knob';
+import Input from './atoms/input/input';
 
 type TViews = {
   container: Container;
-  bar: Bar;
+  bar: Line;
   from: {
     knob: Knob;
     input: Input;

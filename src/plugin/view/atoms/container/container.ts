@@ -4,19 +4,19 @@ import type { TContainerProps } from './types';
 
 class Container {
   #props: TContainerProps;
-  #container: HTMLDivElement;
+  #elem: HTMLDivElement;
 
   constructor(props: TContainerProps) {
     this.#props = props;
-    this.#container = this.#create();
+    this.#elem = this.#create();
   }
 
   getHTML(): HTMLDivElement {
-    return this.#container;
+    return this.#elem;
   }
 
   getOffsets(): TContainer {
-    const { top, left } = this.#container.getBoundingClientRect();
+    const { top, left } = this.#elem.getBoundingClientRect();
     return { top, left };
   }
 

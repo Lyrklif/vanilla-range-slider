@@ -3,19 +3,19 @@ import type { TInputProps } from './types';
 
 class Input {
   #props: TInputProps;
-  #input: HTMLInputElement;
+  #elem: HTMLInputElement;
 
   constructor(props: TInputProps) {
     this.#props = props;
-    this.#input = this.#create();
+    this.#elem = this.#create();
   }
 
   getHTML(): HTMLInputElement {
-    return this.#input;
+    return this.#elem;
   }
 
   setValue(value: number | string) {
-    this.#input.setAttribute('value', `${value}`);
+    this.#elem.setAttribute('value', `${value}`);
   }
 
   #create(): HTMLInputElement {

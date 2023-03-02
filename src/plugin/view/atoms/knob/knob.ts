@@ -3,20 +3,20 @@ import type { TKnobProps, TSide } from './types';
 
 class Knob {
   #props: TKnobProps;
-  #knob: HTMLButtonElement;
+  #elem: HTMLButtonElement;
 
   constructor(props: TKnobProps) {
     this.#props = props;
-    this.#knob = this.#create();
+    this.#elem = this.#create();
   }
 
   getHTML(): HTMLButtonElement {
-    return this.#knob;
+    return this.#elem;
   }
 
   setStyle(percent: number): void {
     const side = this.#getSide();
-    this.#knob.style[side] = `${percent}%`;
+    this.#elem.style[side] = `${percent}%`;
   }
 
   #create(): HTMLButtonElement {

@@ -6,13 +6,13 @@
   user-select: none;
   margin-left: auto;
   margin-right: auto;
-  
+
   &.vertical {
     width: auto;
     height: 100%;
   }
 
-  &__bar {
+  &__line {
     width: 100%;
     height: $knobSize;
     background-color: lightgray;
@@ -30,7 +30,7 @@
     cursor: pointer;
     top: 0;
     transform: translateX(-50%);
-    
+
     &.invert {
       transform: translateX(50%);
     }

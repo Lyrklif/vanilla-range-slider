@@ -1,4 +1,4 @@
-type TBarProps = {
+type TLineProps = {
   invert: boolean;
   vertical: boolean;
   classes?: string;
@@ -9,4 +9,4 @@ type TSizes = {
   height: number;
 };
 
-export type { TBarProps, TSizes };
+export type { TLineProps, TSizes };

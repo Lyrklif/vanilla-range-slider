@@ -38,18 +38,19 @@ class Controller extends Observer {
 
   #moveKnobFrom(event: MouseEvent) {
     const { percent, value } = this.#moveKnob(event);
-    this.#view.getView().from.knob.setStyle(percent);
     this.#view.getView().from.input.setValue(value);
+    this.#view.getControls().setFromPercent(percent);
     this.#model.setFromControlState({ value, percent });
   }
 
   #moveKnobTo(event: MouseEvent) {
-    const to = this.#view.getView().to;
-    if (!to) return;
-
     const { percent, value } = this.#moveKnob(event);
-    to.knob.setStyle(percent);
-    to.input.setValue(value);
+    const to = this.#view.getView().to;
+    if (to) {
+      to.input.setValue(value);
+    }
+
+    this.#view.getControls().setToPercent(percent);
     this.#model.setToControlState({ value, percent });
   }
 

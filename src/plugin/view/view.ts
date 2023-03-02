@@ -1,94 +1,80 @@
 import type { TSliderProps } from '../controller/types';
 import type { TViews } from './types';
-import Knob from './children/knob/knob';
-import Input from './children/input/input';
-import Bar from './children/bar/bar';
-import Container from './children/container/container';
+import Knob from './atoms/knob/knob';
+import Input from './atoms/input/input';
+import Line from './atoms/line/line';
+import Container from './atoms/container/container';
 
-import { KNOB1, KNOB2 } from '../constants/classes';
+import { KNOB1 } from '../constants/classes';
 import Observer from '../observer/observer';
+import Controls from './organisms/controls/controls';
 
 class View extends Observer {
   #props;
+  #controls;
   #views: TViews;
   #parentHTML: HTMLElement | Element;
   #boundHandlers: {
     moveFrom: (event: MouseEvent) => void;
     moveTo: (event: MouseEvent) => void;
-    stopDragging: () => void;
-    startFrom: (event: MouseEvent) => void;
-    startTo: (event: MouseEvent) => void;
   };
 
   constructor(parentHTML: HTMLElement | Element, props: TSliderProps | any) {
     super();
 
+    const { invert, vertical, range } = props;
     this.#props = props;
     this.#parentHTML = parentHTML;
     this.#views = this.#create();
 
+    this.#controls = new Controls({ invert, vertical, range });
+
     this.#boundHandlers = {
       moveFrom: this.#moveHandler.bind(this, 'onMouseMoveFrom'),
       moveTo: this.#moveHandler.bind(this, 'onMouseMoveTo'),
-      stopDragging: this.#stopDragging.bind(this),
-      startFrom: this.#startDragging.bind(this, 'moveFrom'),
-      startTo: this.#startDragging.bind(this, 'moveTo'),
     };
 
     this.#display();
     window.addEventListener('resize', this.#resizeHandler.bind(this));
     this.#views.bar.getHTML().addEventListener('click', this.#boundHandlers.moveFrom);
-    this.#views.from.knob.getHTML().addEventListener('mousedown', this.#boundHandlers.startFrom);
 
-    if (this.#views.to) {
-      this.#views.to.knob.getHTML().addEventListener('mousedown', this.#boundHandlers.startTo);
-    }
+    this.#controls.subscribe('onMouseMoveFrom', this.#boundHandlers.moveFrom);
+    this.#controls.subscribe('onMouseMoveTo', this.#boundHandlers.moveTo);
   }
 
   getView(): TViews {
     return this.#views;
   }
+  getControls() {
+    return this.#controls;
+  }
 
   #create(): TViews {
-    const { invert, vertical, to, from, range } = this.#props;
+    const { invert, vertical, from } = this.#props;
 
     return {
       container: new Container({ invert, vertical }),
-      bar: new Bar({ invert, vertical }),
+      bar: new Line({ invert, vertical }),
       from: {
         knob: new Knob({ invert, vertical, classes: KNOB1 }),
         input: new Input({ value: from.value }),
       },
-      to: range
-        ? {
-            knob: new Knob({ invert, vertical, classes: KNOB2 }),
-            input: new Input({ value: to.value }),
-          }
-        : null,
+      to: null,
     };
   }
 
   #display() {
     const { container, bar, from, to } = this.#views;
 
-    const children = [bar.getHTML(), from.knob.getHTML(), from.input.getHTML()];
+    const controlsHTML = this.#controls.getArrayHTML();
+
+    const children = [bar.getHTML(), from.input.getHTML(), ...controlsHTML];
     if (to) {
       children.push(to.input.getHTML());
-      children.push(to.knob.getHTML());
     }
     container.getHTML().append(...children);
+
     this.#parentHTML.appendChild(container.getHTML());
-  }
-
-  #stopDragging() {
-    document.removeEventListener('mousemove', this.#boundHandlers.moveFrom);
-    document.removeEventListener('mousemove', this.#boundHandlers.moveTo);
-    document.removeEventListener('mouseup', this.#boundHandlers.stopDragging);
-  }
-
-  #startDragging(type: 'moveFrom' | 'moveTo'): void {
-    document.addEventListener('mousemove', this.#boundHandlers[type]);
-    document.addEventListener('mouseup', this.#boundHandlers.stopDragging);
   }
 
   #moveHandler(type: 'onMouseMoveFrom' | 'onMouseMoveTo', event: MouseEvent) {
