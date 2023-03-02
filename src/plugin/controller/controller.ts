@@ -21,39 +21,39 @@ class Controller extends Observer {
       to: this.#model.getToControlState(),
     });
 
-    this.#view.subscribe('onResize', this.updateSizes.bind(this));
-    this.#view.subscribe('onMouseMoveFrom', this.moveKnobFrom.bind(this));
-    this.#view.subscribe('onMouseMoveTo', this.moveKnobTo.bind(this));
+    this.#view.subscribe('onResize', this.#updateSizes.bind(this));
+    this.#view.subscribe('onMouseMoveFrom', this.#moveKnobFrom.bind(this));
+    this.#view.subscribe('onMouseMoveTo', this.#moveKnobTo.bind(this));
 
-    this.updateSizes();
+    this.#updateSizes();
   }
 
-  private updateSizes() {
-    const { height, width } = this.#view.getBar().getSize();
-    const offsets = this.#view.getContainer().getOffsets();
+  #updateSizes() {
+    const { height, width } = this.#view.getView().bar.getSize();
+    const offsets = this.#view.getView().container.getOffsets();
 
     this.#model.setContainerState(offsets);
     this.#model.setBarState({ height, width });
   }
 
-  private moveKnobFrom(event: MouseEvent) {
-    const { percent, value } = this.moveKnob(event);
-    this.#view.getFrom().knob.setStyle(percent);
-    this.#view.getFrom().input.setValue(value);
+  #moveKnobFrom(event: MouseEvent) {
+    const { percent, value } = this.#moveKnob(event);
+    this.#view.getView().from.knob.setStyle(percent);
+    this.#view.getView().from.input.setValue(value);
     this.#model.setFromControlState({ value, percent });
   }
 
-  private moveKnobTo(event: MouseEvent) {
-    const to = this.#view.getTo();
+  #moveKnobTo(event: MouseEvent) {
+    const to = this.#view.getView().to;
     if (!to) return;
 
-    const { percent, value } = this.moveKnob(event);
+    const { percent, value } = this.#moveKnob(event);
     to.knob.setStyle(percent);
     to.input.setValue(value);
     this.#model.setToControlState({ value, percent });
   }
 
-  private moveKnob(event: MouseEvent): { percent: number; value: number } {
+  #moveKnob(event: MouseEvent): { percent: number; value: number } {
     const { vertical, min, max, step, invert } = this.#model.getSettings();
     const { left, top } = this.#model.getContainerState();
     const bar = this.#model.getBarState();

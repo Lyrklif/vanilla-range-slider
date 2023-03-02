@@ -1,24 +1,12 @@
 import type { TSliderProps } from '../controller/types';
-import Knob from '../view/knob';
-import Input from '../view/input';
-import Bar from '../view/bar';
-import Container from '../view/container';
+import type { TViews } from './types';
+import Knob from './children/knob/knob';
+import Input from './children/input/input';
+import Bar from './children/bar/bar';
+import Container from './children/container/container';
 
 import { KNOB1, KNOB2 } from '../constants/classes';
 import Observer from '../observer/observer';
-
-type TViews = {
-  container: Container;
-  bar: Bar;
-  from: {
-    knob: Knob;
-    input: Input;
-  };
-  to: null | {
-    knob: Knob;
-    input: Input;
-  };
-};
 
 class View extends Observer {
   #props;
@@ -57,20 +45,8 @@ class View extends Observer {
     }
   }
 
-  getFrom(): { knob: Knob; input: Input } {
-    return this.#views.from;
-  }
-
-  getTo(): null | { knob: Knob; input: Input } {
-    return this.#views.to;
-  }
-
-  getContainer(): Container {
-    return this.#views.container;
-  }
-
-  getBar(): Bar {
-    return this.#views.bar;
+  getView(): TViews {
+    return this.#views;
   }
 
   #create(): TViews {
@@ -104,7 +80,7 @@ class View extends Observer {
     this.#parentHTML.appendChild(container.getHTML());
   }
 
-  #stopDragging(): void {
+  #stopDragging() {
     document.removeEventListener('mousemove', this.#boundHandlers.moveFrom);
     document.removeEventListener('mousemove', this.#boundHandlers.moveTo);
     document.removeEventListener('mouseup', this.#boundHandlers.stopDragging);
@@ -123,6 +99,5 @@ class View extends Observer {
     this.notify('onResize', event);
   }
 }
-
 
 export default View;

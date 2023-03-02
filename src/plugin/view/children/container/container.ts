@@ -1,11 +1,6 @@
-import { VERTICAL, INVERT, WRAPPER } from '../constants/classes';
-import { TContainer } from '../model/types';
-
-type TContainerProps = {
-  invert: boolean;
-  vertical: boolean;
-  classes?: string;
-};
+import { VERTICAL, INVERT, WRAPPER } from '../../../constants/classes';
+import type { TContainer } from '../../../model/types';
+import type { TContainerProps } from './types';
 
 class Container {
   #props: TContainerProps;
@@ -27,6 +22,7 @@ class Container {
 
   #create(): HTMLDivElement {
     const { invert, vertical, classes } = this.#props;
+
     const container = document.createElement('div');
     container.classList.add(WRAPPER);
     if (invert) container.classList.add(INVERT);

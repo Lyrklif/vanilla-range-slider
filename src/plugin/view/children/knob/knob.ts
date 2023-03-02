@@ -1,10 +1,5 @@
-import { KNOB, VERTICAL, INVERT } from '../constants/classes';
-
-type TKnobProps = {
-  invert: boolean;
-  vertical: boolean;
-  classes?: string;
-};
+import { KNOB, VERTICAL, INVERT } from '../../../constants/classes';
+import type { TKnobProps, TSide } from './types';
 
 class Knob {
   #props: TKnobProps;
@@ -25,17 +20,19 @@ class Knob {
   }
 
   #create(): HTMLButtonElement {
+    const { invert, vertical, classes } = this.#props;
+
     const knob = document.createElement('button');
     knob.type = 'button';
     knob.classList.add(KNOB);
-    if (this.#props.invert) knob.classList.add(INVERT);
-    if (this.#props.vertical) knob.classList.add(VERTICAL);
-    if (this.#props.classes) knob.classList.add(this.#props.classes);
+    if (invert) knob.classList.add(INVERT);
+    if (vertical) knob.classList.add(VERTICAL);
+    if (classes) knob.classList.add(classes);
 
     return knob;
   }
 
-  #getSide(): 'left' | 'top' | 'right' | 'bottom' {
+  #getSide(): TSide {
     const { invert, vertical } = this.#props;
     return invert ? (vertical ? 'top' : 'right') : vertical ? 'bottom' : 'left';
   }
