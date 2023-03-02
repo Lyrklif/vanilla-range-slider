@@ -1,4 +1,5 @@
 import { VERTICAL, INVERT, WRAPPER } from '../constants/classes';
+import { TContainer } from '../model/types';
 
 type TContainerProps = {
   invert: boolean;
@@ -19,12 +20,9 @@ class Container {
     return this.#container;
   }
 
-  getMargin(): number {
-    const { vertical } = this.#props;
-    const rect = this.#container.getBoundingClientRect();
-    const scrollOffset = vertical ? window.scrollY : window.scrollX;
-
-    return rect[vertical ? 'top' : 'left'] + scrollOffset;
+  getOffsets(): TContainer {
+    const { top, left } = this.#container.getBoundingClientRect();
+    return { top, left };
   }
 
   #create(): HTMLDivElement {
@@ -38,6 +36,5 @@ class Container {
     return container;
   }
 }
-
 
 export default Container;

@@ -1,30 +1,23 @@
-
-
 type TContainer = {
-  margin: number
-}
+  top: number;
+  left: number;
+};
 
 type TBar = {
-  height: number
-  width: number
-}
+  height: number;
+  width: number;
+};
 
 type TControl = {
-  value: number
-  percent: number
-}
-
+  value: number;
+  percent: number;
+};
 
 type TSliderState = {
-  container: TContainer
-  bar: TBar
-  from: TControl
-  to: TControl
-}
+  container: TContainer;
+  bar: TBar;
+  from: TControl;
+  to: TControl;
+};
 
-export type {
-  TSliderState,
-  TContainer,
-  TBar,
-  TControl,
-}
+export type { TSliderState, TContainer, TBar, TControl };

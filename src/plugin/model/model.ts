@@ -17,7 +17,8 @@ class Model {
 
     this.#state = {
       container: {
-        margin: 0,
+        top: 0,
+        left: 0,
       },
       bar: {
         height: 0,

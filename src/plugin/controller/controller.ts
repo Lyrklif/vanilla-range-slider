@@ -28,10 +28,11 @@ class Controller extends Observer {
     this.updateSizes();
   }
 
-  private updateSizes(): void {
+  private updateSizes() {
     const { height, width } = this.#view.getBar().getSize();
-    const margin = this.#view.getContainer().getMargin();
-    this.#model.setContainerState({ margin });
+    const offsets = this.#view.getContainer().getOffsets();
+
+    this.#model.setContainerState(offsets);
     this.#model.setBarState({ height, width });
   }
 
@@ -54,24 +55,27 @@ class Controller extends Observer {
 
   private moveKnob(event: MouseEvent): { percent: number; value: number } {
     const { vertical, min, max, step, invert } = this.#model.getSettings();
+    const { left, top } = this.#model.getContainerState();
     const bar = this.#model.getBarState();
+
+    const containerMargin: number = vertical ? top : left;
     const size: number = vertical ? event.clientY : event.clientX;
-    const knobOffset: number = size - this.#model.getContainerState().margin;
+    const knobOffset: number = size - containerMargin;
+    const barSize: number = vertical ? bar.height : bar.width;
     let offset = MIN_PERCENT;
-    const barSize = vertical ? bar.height : bar.width;
+
     if (barSize > MIN_PERCENT) {
       offset = (knobOffset * MAX_PERCENT) / barSize;
       offset = (vertical && !invert) || (!vertical && invert) ? MAX_PERCENT - offset : offset;
       offset = Math.max(MIN_PERCENT, Math.min(offset, MAX_PERCENT));
     }
     const percent = offset;
-    let value = Number(((percent * max) / MAX_PERCENT));
+    let value = Number((percent * max) / MAX_PERCENT);
     value = Math.round((value - min) / step) * step + min;
-    value = Number(value.toFixed(1))
+    value = Number(value.toFixed(1));
 
     return { percent, value };
   }
 }
-
 
 export default Controller;
