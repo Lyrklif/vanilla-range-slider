@@ -30,7 +30,7 @@ class Controller extends Observer {
 
   #updateSizes() {
     const { height, width } = this.#view.getBar().getSize();
-    const offsets = this.#view.getView().container.getOffsets();
+    const offsets = this.#view.getContainer().getOffsets();
 
     this.#model.setContainerState(offsets);
     this.#model.setBarState({ height, width });
@@ -38,18 +38,14 @@ class Controller extends Observer {
 
   #moveKnobFrom(event: MouseEvent) {
     const { percent, value } = this.#moveKnob(event);
-    this.#view.getView().from.input.setValue(value);
+    this.#view.getFields().setFrom(value);
     this.#view.getControls().setFromPercent(percent);
     this.#model.setFromControlState({ value, percent });
   }
 
   #moveKnobTo(event: MouseEvent) {
     const { percent, value } = this.#moveKnob(event);
-    const to = this.#view.getView().to;
-    if (to) {
-      to.input.setValue(value);
-    }
-
+    this.#view.getFields().setTo(value);
     this.#view.getControls().setToPercent(percent);
     this.#model.setToControlState({ value, percent });
   }

@@ -1,20 +1,15 @@
 import type { TSliderProps } from '../controller/types';
-import type { TViews } from './types';
-import Knob from './atoms/knob/knob';
-import Input from './atoms/input/input';
-import Line from './atoms/line/line';
 import Container from './atoms/container/container';
-
-import { KNOB1 } from '../constants/classes';
 import Observer from '../observer/observer';
 import Controls from './organisms/controls/controls';
 import Bar from './organisms/bar/bar';
+import Fields from './molecules/fields/fields';
 
 class View extends Observer {
-  #props;
   #controls;
   #bar;
-  #views: TViews;
+  #fields;
+  #container;
   #parentHTML: HTMLElement | Element;
   #boundHandlers: {
     moveFrom: (event: MouseEvent) => void;
@@ -25,12 +20,12 @@ class View extends Observer {
     super();
 
     const { invert, vertical, range, fill } = props;
-    this.#props = props;
     this.#parentHTML = parentHTML;
-    this.#views = this.#create();
 
     this.#controls = new Controls({ invert, vertical, range });
     this.#bar = new Bar({ invert, vertical, fill });
+    this.#fields = new Fields({ range });
+    this.#container = new Container({ invert, vertical });
 
     this.#boundHandlers = {
       moveFrom: this.#moveHandler.bind(this, 'onMouseMoveFrom'),
@@ -45,43 +40,29 @@ class View extends Observer {
     this.#bar.subscribe('onBarClick', this.#boundHandlers.moveFrom);
   }
 
-  getView(): TViews {
-    return this.#views;
+  getContainer() {
+    return this.#container;
   }
   getControls() {
     return this.#controls;
+  }
+  getFields() {
+    return this.#fields;
   }
   getBar() {
     return this.#bar;
   }
 
-  #create(): TViews {
-    const { invert, vertical, from } = this.#props;
-
-    return {
-      container: new Container({ invert, vertical }),
-      bar: new Line({ invert, vertical }),
-      from: {
-        knob: new Knob({ invert, vertical, classes: KNOB1 }),
-        input: new Input({ value: from.value }),
-      },
-      to: null,
-    };
-  }
-
   #display() {
-    const { container, from, to } = this.#views;
-
     const controlsHTML = this.#controls.getArrayHTML();
     const barHTML = this.#bar.getHTMLChildren();
+    const fieldsHTML = this.#fields.getHTMLChildren();
+    const containerHTML = this.#container.getHTML();
 
-    const children = [from.input.getHTML(), ...barHTML, ...controlsHTML];
-    if (to) {
-      children.push(to.input.getHTML());
-    }
-    container.getHTML().append(...children);
+    const children = [...fieldsHTML, ...barHTML, ...controlsHTML];
+    containerHTML.append(...children);
 
-    this.#parentHTML.appendChild(container.getHTML());
+    this.#parentHTML.appendChild(containerHTML);
   }
 
   #moveHandler(type: 'onMouseMoveFrom' | 'onMouseMoveTo', event: MouseEvent) {

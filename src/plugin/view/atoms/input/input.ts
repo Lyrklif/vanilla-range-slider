@@ -1,12 +1,9 @@
 import { INPUT } from '../../../constants/classes';
-import type { TInputProps } from './types';
 
 class Input {
-  #props: TInputProps;
   #elem: HTMLInputElement;
 
-  constructor(props: TInputProps) {
-    this.#props = props;
+  constructor() {
     this.#elem = this.#create();
   }
 
@@ -19,13 +16,9 @@ class Input {
   }
 
   #create(): HTMLInputElement {
-    const { classes, value } = this.#props;
-
     const input = document.createElement('input');
     input.type = 'text';
-    input.setAttribute('value', `${value}`);
     input.classList.add(INPUT);
-    if (classes) input.classList.add(classes);
 
     return input;
   }
