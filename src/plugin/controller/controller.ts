@@ -14,9 +14,7 @@ class Controller extends Observer {
     super();
     this.#model = new Model(props);
     this.#view = new View(parentHTML, {
-      invert: this.#model.getSettings().invert,
-      vertical: this.#model.getSettings().vertical,
-      range: this.#model.getSettings().range,
+      ...props,
       from: this.#model.getFromControlState(),
       to: this.#model.getToControlState(),
     });
@@ -26,6 +24,7 @@ class Controller extends Observer {
     this.#view.subscribe('onMouseMoveTo', this.#moveKnobTo.bind(this));
 
     this.#updateSizes();
+    this.#updFillStyle();
   }
 
   #updateSizes() {
@@ -36,11 +35,23 @@ class Controller extends Observer {
     this.#model.setBarState({ height, width });
   }
 
+  #updFillStyle() {
+    const { range } = this.#model.getSettings();
+    const { percent: fromPercent } = this.#model.getFromControlState();
+    const { percent: toPercent } = this.#model.getToControlState();
+    if (range) {
+      this.#view.getBar().setFillStyle(fromPercent, toPercent - fromPercent);
+    } else {
+      this.#view.getBar().setFillStyle(MIN_PERCENT, fromPercent);
+    }
+  }
+
   #moveKnobFrom(event: MouseEvent) {
     const { percent, value } = this.#moveKnob(event);
     this.#view.getFields().setFrom(value);
     this.#view.getControls().setFromPercent(percent);
     this.#model.setFromControlState({ value, percent });
+    this.#updFillStyle();
   }
 
   #moveKnobTo(event: MouseEvent) {
@@ -48,6 +59,7 @@ class Controller extends Observer {
     this.#view.getFields().setTo(value);
     this.#view.getControls().setToPercent(percent);
     this.#model.setToControlState({ value, percent });
+    this.#updFillStyle();
   }
 
   #moveKnob(event: MouseEvent): { percent: number; value: number } {

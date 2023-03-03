@@ -1,4 +1,4 @@
-import { RANGE, VERTICAL, INVERT } from '../../../constants/classes';
+import { FILL, VERTICAL, INVERT } from '../../../constants/classes';
 import type { TFillProps } from './types';
 import { TSide } from '../knob/types';
 
@@ -16,16 +16,18 @@ class Fill {
   }
 
   setStyle(startPercent: number, endPercent: number): void {
+    const { vertical } = this.#props;
     const side = this.#getSide();
+    const maxSize = vertical ? 'maxHeight' : 'maxWidth';
     this.#elem.style[side] = `${startPercent}%`;
-    this.#elem.style.maxWidth = `${endPercent}%`;
+    this.#elem.style[maxSize] = `${endPercent}%`;
   }
 
   #create(): HTMLDivElement {
     const { invert, vertical, classes } = this.#props;
 
     const elem = document.createElement('div');
-    elem.classList.add(RANGE);
+    elem.classList.add(FILL);
     if (invert) elem.classList.add(INVERT);
     if (vertical) elem.classList.add(VERTICAL);
     if (classes) elem.classList.add(classes);

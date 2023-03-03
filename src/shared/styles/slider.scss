@@ -22,6 +22,33 @@
       width: $knobSize;
     }
   }
+  &__fill {
+    background-color: darksalmon;
+    height: $knobSize;
+    width: 100%;
+    position: absolute;
+    pointer-events: none;
+    top: 0;
+    left: 0;
+
+    &.invert {
+      left: auto;
+      right: 0;
+    }
+
+    &.vertical {
+      bottom: 0;
+      top: auto;
+      left: 0;
+      height: 100%;
+      width: $knobSize;
+
+      &.invert {
+        top: auto;
+        bottom: 0;
+      }
+    }
+  }
   &__knob {
     height: $knobSize;
     width: $knobSize;
@@ -29,13 +56,17 @@
     background-color: grey;
     cursor: pointer;
     top: 0;
+    left: 0;
     transform: translateX(-50%);
 
     &.invert {
+      right: 0;
+      left: auto;
       transform: translateX(50%);
     }
 
     &.vertical {
+      left: 0;
       top: auto;
       bottom: 0;
       transform: translateY(50%);

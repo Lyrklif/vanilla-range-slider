@@ -52,7 +52,7 @@ class View extends Observer {
   }
 
   #display(parentHTML: HTMLElement | Element) {
-    const controlsHTML = this.#controls.getArrayHTML();
+    const controlsHTML = this.#controls.getHTMLChildren();
     const barHTML = this.#bar.getHTMLChildren();
     const fieldsHTML = this.#fields.getHTMLChildren();
     const containerHTML = this.#container.getHTML();

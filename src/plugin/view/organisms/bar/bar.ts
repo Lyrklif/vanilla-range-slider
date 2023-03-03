@@ -2,6 +2,7 @@ import Observer from '../../../observer/observer';
 import Line from '../../atoms/line/line';
 import Fill from '../../atoms/fill/fill';
 import { TSizes } from '../../atoms/line/types';
+import { NOTICE } from '../../../types/notive';
 
 class Bar extends Observer {
   #line: Line;
@@ -34,7 +35,7 @@ class Bar extends Observer {
   }
 
   #clickHandler(event: MouseEvent) {
-    this.notify('onBarClick', event);
+    this.notify(NOTICE.barClick, event);
   }
 }
 

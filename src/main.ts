@@ -5,10 +5,11 @@ import initSlider from './plugin/index';
 
 window.addEventListener('load', () => {
   const params1 = {
-    min: 0,
-    max: 100,
+    min: -40,
+    max: 60,
     step: 1,
     range: true,
+    fill: true,
   };
   const params2 = {
     min: 0,
@@ -16,6 +17,7 @@ window.addEventListener('load', () => {
     step: 1,
     vertical: true,
     range: true,
+    fill: true,
   };
 
   initSlider('#horizontal-slider', params1);
