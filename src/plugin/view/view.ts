@@ -10,7 +10,6 @@ class View extends Observer {
   #bar;
   #fields;
   #container;
-  #parentHTML: HTMLElement | Element;
   #boundHandlers: {
     moveFrom: (event: MouseEvent) => void;
     moveTo: (event: MouseEvent) => void;
@@ -20,8 +19,6 @@ class View extends Observer {
     super();
 
     const { invert, vertical, range, fill } = props;
-    this.#parentHTML = parentHTML;
-
     this.#controls = new Controls({ invert, vertical, range });
     this.#bar = new Bar({ invert, vertical, fill });
     this.#fields = new Fields({ range });
@@ -32,7 +29,7 @@ class View extends Observer {
       moveTo: this.#moveHandler.bind(this, 'onMouseMoveTo'),
     };
 
-    this.#display();
+    this.#display(parentHTML);
     window.addEventListener('resize', this.#resizeHandler.bind(this));
 
     this.#controls.subscribe('onMouseMoveFrom', this.#boundHandlers.moveFrom);
@@ -53,7 +50,7 @@ class View extends Observer {
     return this.#bar;
   }
 
-  #display() {
+  #display(parentHTML: HTMLElement | Element) {
     const controlsHTML = this.#controls.getArrayHTML();
     const barHTML = this.#bar.getHTMLChildren();
     const fieldsHTML = this.#fields.getHTMLChildren();
@@ -62,7 +59,7 @@ class View extends Observer {
     const children = [...fieldsHTML, ...barHTML, ...controlsHTML];
     containerHTML.append(...children);
 
-    this.#parentHTML.appendChild(containerHTML);
+    parentHTML.appendChild(containerHTML);
   }
 
   #moveHandler(type: 'onMouseMoveFrom' | 'onMouseMoveTo', event: MouseEvent) {
