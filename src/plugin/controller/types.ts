@@ -5,6 +5,7 @@ type TSliderProps = {
   invert?: boolean;
   vertical?: boolean;
   range?: boolean;
+  fill?: boolean;
   classes?: {
     container?: string;
     bar?: string;

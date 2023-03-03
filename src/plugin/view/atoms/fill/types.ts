@@ -1,7 +1,7 @@
-type TRangeProps = {
+type TFillProps = {
   invert: boolean;
   vertical: boolean;
   classes?: string;
 };
 
-export type { TRangeProps };
+export type { TFillProps };

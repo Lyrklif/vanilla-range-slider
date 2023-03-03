@@ -8,10 +8,12 @@ import Container from './atoms/container/container';
 import { KNOB1 } from '../constants/classes';
 import Observer from '../observer/observer';
 import Controls from './organisms/controls/controls';
+import Bar from './organisms/bar/bar';
 
 class View extends Observer {
   #props;
   #controls;
+  #bar;
   #views: TViews;
   #parentHTML: HTMLElement | Element;
   #boundHandlers: {
@@ -22,12 +24,13 @@ class View extends Observer {
   constructor(parentHTML: HTMLElement | Element, props: TSliderProps | any) {
     super();
 
-    const { invert, vertical, range } = props;
+    const { invert, vertical, range, fill } = props;
     this.#props = props;
     this.#parentHTML = parentHTML;
     this.#views = this.#create();
 
     this.#controls = new Controls({ invert, vertical, range });
+    this.#bar = new Bar({ invert, vertical, fill });
 
     this.#boundHandlers = {
       moveFrom: this.#moveHandler.bind(this, 'onMouseMoveFrom'),
@@ -36,10 +39,10 @@ class View extends Observer {
 
     this.#display();
     window.addEventListener('resize', this.#resizeHandler.bind(this));
-    this.#views.bar.getHTML().addEventListener('click', this.#boundHandlers.moveFrom);
 
     this.#controls.subscribe('onMouseMoveFrom', this.#boundHandlers.moveFrom);
     this.#controls.subscribe('onMouseMoveTo', this.#boundHandlers.moveTo);
+    this.#bar.subscribe('onBarClick', this.#boundHandlers.moveFrom);
   }
 
   getView(): TViews {
@@ -47,6 +50,9 @@ class View extends Observer {
   }
   getControls() {
     return this.#controls;
+  }
+  getBar() {
+    return this.#bar;
   }
 
   #create(): TViews {
@@ -64,11 +70,12 @@ class View extends Observer {
   }
 
   #display() {
-    const { container, bar, from, to } = this.#views;
+    const { container, from, to } = this.#views;
 
     const controlsHTML = this.#controls.getArrayHTML();
+    const barHTML = this.#bar.getHTMLChildren();
 
-    const children = [bar.getHTML(), from.input.getHTML(), ...controlsHTML];
+    const children = [from.input.getHTML(), ...barHTML, ...controlsHTML];
     if (to) {
       children.push(to.input.getHTML());
     }

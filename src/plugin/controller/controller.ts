@@ -29,7 +29,7 @@ class Controller extends Observer {
   }
 
   #updateSizes() {
-    const { height, width } = this.#view.getView().bar.getSize();
+    const { height, width } = this.#view.getBar().getSize();
     const offsets = this.#view.getView().container.getOffsets();
 
     this.#model.setContainerState(offsets);

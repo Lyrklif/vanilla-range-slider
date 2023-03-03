@@ -1,11 +1,12 @@
 import { RANGE, VERTICAL, INVERT } from '../../../constants/classes';
-import type { TRangeProps } from './types';
+import type { TFillProps } from './types';
+import { TSide } from '../knob/types';
 
-class Range {
-  #props: TRangeProps;
+class Fill {
+  #props: TFillProps;
   #elem: HTMLDivElement;
 
-  constructor(props: TRangeProps) {
+  constructor(props: TFillProps) {
     this.#props = props;
     this.#elem = this.#create();
   }
@@ -14,8 +15,10 @@ class Range {
     return this.#elem;
   }
 
-  setStyle(percent: number): void {
-    this.#elem.style.maxWidth = `${percent}%`;
+  setStyle(startPercent: number, endPercent: number): void {
+    const side = this.#getSide();
+    this.#elem.style[side] = `${startPercent}%`;
+    this.#elem.style.maxWidth = `${endPercent}%`;
   }
 
   #create(): HTMLDivElement {
@@ -29,6 +32,11 @@ class Range {
 
     return elem;
   }
+
+  #getSide(): TSide {
+    const { invert, vertical } = this.#props;
+    return invert ? (vertical ? 'top' : 'right') : vertical ? 'bottom' : 'left';
+  }
 }
 
-export default Range;
+export default Fill;
