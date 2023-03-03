@@ -4,6 +4,7 @@ import Observer from '../observer/observer';
 import Controls from './organisms/controls/controls';
 import Bar from './organisms/bar/bar';
 import Fields from './molecules/fields/fields';
+import { NOTICE } from '../types/notive';
 
 class View extends Observer {
   #controls;
@@ -25,16 +26,16 @@ class View extends Observer {
     this.#container = new Container({ invert, vertical });
 
     this.#boundHandlers = {
-      moveFrom: this.#moveHandler.bind(this, 'onMouseMoveFrom'),
-      moveTo: this.#moveHandler.bind(this, 'onMouseMoveTo'),
+      moveFrom: this.#moveHandler.bind(this, NOTICE.moveFrom),
+      moveTo: this.#moveHandler.bind(this, NOTICE.moveTo),
     };
 
     this.#display(parentHTML);
     window.addEventListener('resize', this.#resizeHandler.bind(this));
 
-    this.#controls.subscribe('onMouseMoveFrom', this.#boundHandlers.moveFrom);
-    this.#controls.subscribe('onMouseMoveTo', this.#boundHandlers.moveTo);
-    this.#bar.subscribe('onBarClick', this.#boundHandlers.moveFrom);
+    this.#controls.subscribe(NOTICE.moveFrom, this.#boundHandlers.moveFrom);
+    this.#controls.subscribe(NOTICE.moveTo, this.#boundHandlers.moveTo);
+    this.#bar.subscribe(NOTICE.barClick, this.#boundHandlers.moveFrom);
   }
 
   getContainer() {
@@ -62,12 +63,12 @@ class View extends Observer {
     parentHTML.appendChild(containerHTML);
   }
 
-  #moveHandler(type: 'onMouseMoveFrom' | 'onMouseMoveTo', event: MouseEvent) {
+  #moveHandler(type: NOTICE.moveFrom | NOTICE.moveTo, event: MouseEvent) {
     this.notify(type, event);
   }
 
   #resizeHandler(event: Event) {
-    this.notify('onResize', event);
+    this.notify(NOTICE.resize, event);
   }
 }
 

@@ -1,6 +1,9 @@
 import Point from '../../molecules/point/point';
 import { KNOB1, KNOB2 } from '../../../constants/classes';
 import Observer from '../../../observer/observer';
+import { NOTICE } from '../../../types/notive';
+import { DRAGGING } from './type';
+import type { TDragging } from './type';
 
 class Controls extends Observer {
   #from: Point;
@@ -36,11 +39,11 @@ class Controls extends Observer {
       : null;
 
     this.#boundHandlers = {
-      moveFrom: this.#moveHandler.bind(this, 'onMouseMoveFrom'),
-      moveTo: this.#moveHandler.bind(this, 'onMouseMoveTo'),
+      moveFrom: this.#moveHandler.bind(this, NOTICE.moveFrom),
+      moveTo: this.#moveHandler.bind(this, NOTICE.moveTo),
       stopDragging: this.#stopDragging.bind(this),
-      startFrom: this.#startDragging.bind(this, 'moveFrom'),
-      startTo: this.#startDragging.bind(this, 'moveTo'),
+      startFrom: this.#startDragging.bind(this, DRAGGING.from),
+      startTo: this.#startDragging.bind(this, DRAGGING.to),
     };
 
     this.#from.getKnob().getHTML().addEventListener('mousedown', this.#boundHandlers.startFrom);
@@ -69,12 +72,12 @@ class Controls extends Observer {
     document.removeEventListener('mouseup', this.#boundHandlers.stopDragging);
   }
 
-  #startDragging(type: 'moveFrom' | 'moveTo'): void {
+  #startDragging(type: TDragging) {
     document.addEventListener('mousemove', this.#boundHandlers[type]);
     document.addEventListener('mouseup', this.#boundHandlers.stopDragging);
   }
 
-  #moveHandler(type: 'onMouseMoveFrom' | 'onMouseMoveTo', event: MouseEvent) {
+  #moveHandler(type: NOTICE.moveFrom | NOTICE.moveTo, event: MouseEvent) {
     this.notify(type, event);
   }
 }
