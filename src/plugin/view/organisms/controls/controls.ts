@@ -50,6 +50,7 @@ class Controls extends Observer {
       this.#from.getKnob().getHTML().addEventListener('mousedown', this.#boundHandlers.startFrom);
     }
     this.#to.getKnob().getHTML().addEventListener('mousedown', this.#boundHandlers.startTo);
+    this.#to.getKnob().getHTML().addEventListener('keydown', this.#arrowEvent);
   }
 
   getHTMLChildren() {
@@ -78,6 +79,14 @@ class Controls extends Observer {
 
   #moveHandler(type: NOTICE.moveFrom | NOTICE.moveTo, event: MouseEvent) {
     this.notify(type, event);
+  }
+  #arrowEvent(event: KeyboardEvent) {
+    const { code } = event;
+    console.log('TTT', code);
+    // const isLeft = code === 'ArrowLeft';
+    // const isRight = code === 'ArrowRight';
+    // const isTop = code === 'ArrowUp';
+    // const isBottom = code === 'ArrowDown';
   }
 }
 
