@@ -6,8 +6,8 @@ import { DRAGGING } from './type';
 import type { TDragging } from './type';
 
 class Controls extends Observer {
-  #from: Point;
-  #to: Point | null;
+  #from: Point | null;
+  #to: Point;
   #boundHandlers: {
     moveFrom: (event: MouseEvent) => void;
     moveTo: (event: MouseEvent) => void;
@@ -21,22 +21,22 @@ class Controls extends Observer {
 
     const { invert, vertical, range } = props;
 
-    this.#from = new Point({
-      invert,
-      vertical,
-      knobClasses: KNOB1,
-      thumb: { text: 'from1' },
-      thumbSecond: { text: 'from2' },
-    });
-    this.#to = range
+    this.#from = range
       ? new Point({
           invert,
           vertical,
-          knobClasses: KNOB2,
-          thumb: { text: 'to1' },
-          thumbSecond: { text: 'to2' },
+          knobClasses: KNOB1,
+          thumb: { text: 'from1' },
+          thumbSecond: { text: 'from2' },
         })
       : null;
+    this.#to = new Point({
+      invert,
+      vertical,
+      knobClasses: KNOB2,
+      thumb: { text: 'to1' },
+      thumbSecond: { text: 'to2' },
+    });
 
     this.#boundHandlers = {
       moveFrom: this.#moveHandler.bind(this, NOTICE.moveFrom),
@@ -46,24 +46,23 @@ class Controls extends Observer {
       startTo: this.#startDragging.bind(this, DRAGGING.to),
     };
 
-    this.#from.getKnob().getHTML().addEventListener('mousedown', this.#boundHandlers.startFrom);
-    if (this.#to) {
-      this.#to.getKnob().getHTML().addEventListener('mousedown', this.#boundHandlers.startTo);
+    if (this.#from) {
+      this.#from.getKnob().getHTML().addEventListener('mousedown', this.#boundHandlers.startFrom);
     }
+    this.#to.getKnob().getHTML().addEventListener('mousedown', this.#boundHandlers.startTo);
   }
 
   getHTMLChildren() {
-    const from = this.#from.getArrayHTML();
-    const to = this.#to?.getArrayHTML() || [];
+    const from = this.#from?.getArrayHTML() || [];
+    const to = this.#to.getArrayHTML();
 
     return [...from, ...to];
   }
-
   setFromPercent(percent: number) {
-    this.#from.getKnob().setStyle(percent);
+    if (this.#from) this.#from.getKnob().setStyle(percent);
   }
   setToPercent(percent: number) {
-    if (this.#to) this.#to.getKnob().setStyle(percent);
+    this.#to.getKnob().setStyle(percent);
   }
 
   #stopDragging() {

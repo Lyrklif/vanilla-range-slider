@@ -42,7 +42,7 @@ class Controller extends Observer {
     if (range) {
       this.#view.getBar().setFillStyle(fromPercent, toPercent - fromPercent);
     } else {
-      this.#view.getBar().setFillStyle(MIN_PERCENT, fromPercent);
+      this.#view.getBar().setFillStyle(MIN_PERCENT, toPercent);
     }
   }
 

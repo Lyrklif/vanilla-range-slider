@@ -8,22 +8,22 @@ class Fields {
   constructor(props: TFieldsProps) {
     const { range } = props;
 
-    this.#from = new Input();
-    this.#to = range ? new Input() : null;
+    this.#from = range ? new Input() : null;
+    this.#to = new Input();
   }
 
   setFrom(value: number | string) {
-    this.#from.setValue(value);
+    if (this.#from) this.#from.setValue(value);
   }
   setTo(value: number | string) {
-    if (this.#to) this.#to.setValue(value);
+    this.#to.setValue(value);
   }
   getHTMLChildren(): Array<HTMLInputElement> {
-    const from = this.#from.getHTML();
-    const to = this.#to?.getHTML();
+    const from = this.#from?.getHTML();
+    const to = this.#to.getHTML();
 
-    const array: Array<HTMLInputElement> = [from];
-    if (to) array.push(to);
+    const array: Array<HTMLInputElement> = [to];
+    if (from) array.push(from);
 
     return array;
   }
