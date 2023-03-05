@@ -11,6 +11,7 @@ window.addEventListener('load', () => {
     range: true,
     fill: true,
     thumb: true,
+    mode: 'strict',
   };
   const params2 = {
     min: 0,
@@ -20,6 +21,7 @@ window.addEventListener('load', () => {
     range: true,
     fill: true,
     thumb: true,
+    mode: 'strict',
   };
 
   initSlider('#horizontal-slider', params1);

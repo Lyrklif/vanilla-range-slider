@@ -7,6 +7,7 @@ import Observer from '../observer/observer';
 import type { TSliderProps } from './types';
 import { NOTICE } from '../types/notive';
 import { DRAGGING, STEP } from '../view/organisms/controls/type';
+import { MODE } from './types';
 
 class Controller extends Observer {
   #model: Model;
@@ -14,6 +15,7 @@ class Controller extends Observer {
 
   constructor(parentHTML: HTMLElement | Element, props: TSliderProps) {
     super();
+
     this.#model = new Model(props);
     this.#view = new View(parentHTML, {
       ...props,
@@ -42,6 +44,7 @@ class Controller extends Observer {
     const { range } = this.#model.getSettings();
     const { percent: fromPercent } = this.#model.getFromControlState();
     const { percent: toPercent } = this.#model.getToControlState();
+
     if (range) {
       const start = Math.min(fromPercent, toPercent);
       const end = Math.max(fromPercent, toPercent);
@@ -51,15 +54,49 @@ class Controller extends Observer {
     }
   }
   #moveKnobFrom(props: { value: number; percent: number }) {
-    const { value, percent } = props;
-    this.#view.setFrom(value, percent);
-    this.#model.setFromControlState({ value, percent });
+    const { mode } = this.#model.getSettings();
+    const { value: oldValue } = this.#model.getFromControlState();
+    const { value: valueTo, percent: percentTo } = this.#model.getToControlState();
+    const isStrictMode = mode === MODE.strict;
+    let currentValue = props.value;
+    let currentPercent = props.percent;
+
+    if (isStrictMode) {
+      const isMinus = oldValue > currentValue;
+      const isPlus = oldValue < currentValue;
+      const isBreakMove = (isMinus && valueTo <= currentValue) || (isPlus && valueTo <= currentValue);
+
+      if (isBreakMove) {
+        currentValue = valueTo;
+        currentPercent = percentTo;
+      }
+    }
+
+    this.#view.setFrom(currentValue, currentPercent);
+    this.#model.setFromControlState({ value: currentValue, percent: currentPercent });
     this.#updFillStyle();
   }
   #moveKnobTo(props: { value: number; percent: number }) {
-    const { value, percent } = props;
-    this.#view.setTo(value, percent);
-    this.#model.setToControlState({ value, percent });
+    const { mode } = this.#model.getSettings();
+    const { value: valueFrom, percent: percentFrom } = this.#model.getFromControlState();
+    const { value: oldValue } = this.#model.getToControlState();
+    const isStrictMode = mode === MODE.strict;
+    let currentValue = props.value;
+    let currentPercent = props.percent;
+
+    if (isStrictMode) {
+      const isMinus = oldValue > currentValue;
+      const isPlus = oldValue < currentValue;
+      const isBreakMove = (isMinus && valueFrom >= currentValue) || (isPlus && valueFrom >= currentValue);
+
+      if (isBreakMove) {
+        currentValue = valueFrom;
+        currentPercent = percentFrom;
+      }
+    }
+
+    this.#view.setTo(currentValue, currentPercent);
+    this.#model.setToControlState({ value: currentValue, percent: currentPercent });
     this.#updFillStyle();
   }
   #barClick(props: { value: number; percent: number }) {

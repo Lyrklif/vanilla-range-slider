@@ -78,12 +78,10 @@ class Controls extends Observer {
     document.removeEventListener('mousemove', this.#boundHandlers.moveTo);
     document.removeEventListener('mouseup', this.#boundHandlers.stopDragging);
   }
-
   #startDragging(type: TDragging) {
     document.addEventListener('mousemove', this.#boundHandlers[type]);
     document.addEventListener('mouseup', this.#boundHandlers.stopDragging);
   }
-
   #moveHandler(type: NOTICE.moveFrom | NOTICE.moveTo, event: MouseEvent) {
     this.notify(type, event);
   }

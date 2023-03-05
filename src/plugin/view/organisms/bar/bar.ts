@@ -29,7 +29,6 @@ class Bar extends Observer {
   getSize(): TSizes {
     return this.#line.getSize();
   }
-
   setFillStyle(startPercent: number, endPercent: number) {
     if (this.#fill) this.#fill.setStyle(startPercent, endPercent);
   }
