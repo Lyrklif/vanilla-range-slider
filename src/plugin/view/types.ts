@@ -16,4 +16,14 @@ type TViews = {
   };
 };
 
-export type { TViews };
+type TCoords = {
+  x: number;
+  y: number;
+};
+
+type TSliderCoords = {
+  x: number;
+  y: number;
+};
+
+export type { TViews, TCoords, TSliderCoords };

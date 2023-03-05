@@ -1,4 +1,4 @@
-import { MAX_PERCENT, MIN_PERCENT } from '../constants/percents';
+import { MIN_PERCENT } from '../constants/percents';
 
 import Model from '../model/model';
 import View from '../view/View';
@@ -34,7 +34,6 @@ class Controller extends Observer {
     this.#model.setContainerState(offsets);
     this.#model.setBarState({ height, width });
   }
-
   #updFillStyle() {
     const { range } = this.#model.getSettings();
     const { percent: fromPercent } = this.#model.getFromControlState();
@@ -45,45 +44,19 @@ class Controller extends Observer {
       this.#view.getBar().setFillStyle(MIN_PERCENT, toPercent);
     }
   }
-
-  #moveKnobFrom(event: MouseEvent) {
-    const { percent, value } = this.#moveKnob(event);
+  #moveKnobFrom(props: { value: number; percent: number }) {
+    const { value, percent } = props;
     this.#view.getFields().setFrom(value);
     this.#view.getControls().setFromPercent(percent);
     this.#model.setFromControlState({ value, percent });
     this.#updFillStyle();
   }
-
-  #moveKnobTo(event: MouseEvent) {
-    const { percent, value } = this.#moveKnob(event);
+  #moveKnobTo(props: { value: number; percent: number }) {
+    const { value, percent } = props;
     this.#view.getFields().setTo(value);
     this.#view.getControls().setToPercent(percent);
     this.#model.setToControlState({ value, percent });
     this.#updFillStyle();
-  }
-
-  #moveKnob(event: MouseEvent): { percent: number; value: number } {
-    const { vertical, min, max, step, invert } = this.#model.getSettings();
-    const { left, top } = this.#model.getContainerState();
-    const bar = this.#model.getBarState();
-
-    const containerMargin: number = vertical ? top : left;
-    const size: number = vertical ? event.clientY : event.clientX;
-    const knobOffset: number = size - containerMargin;
-    const barSize: number = vertical ? bar.height : bar.width;
-    let offset = MIN_PERCENT;
-
-    if (barSize > MIN_PERCENT) {
-      offset = (knobOffset * MAX_PERCENT) / barSize;
-      offset = (vertical && !invert) || (!vertical && invert) ? MAX_PERCENT - offset : offset;
-      offset = Math.max(MIN_PERCENT, Math.min(offset, MAX_PERCENT));
-    }
-    const percent = offset;
-    let value = Number((percent * max) / MAX_PERCENT);
-    value = Math.round((value - min) / step) * step + min;
-    value = Number(value.toFixed(1));
-
-    return { percent, value };
   }
 }
 
