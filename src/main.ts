@@ -21,6 +21,8 @@ window.addEventListener('load', () => {
   };
 
   initSlider('#horizontal-slider', params1);
+  initSlider('#horizontal-slider2', { ...params1, invert: true });
   initSlider('#vertical-slider', params2);
+  initSlider('#vertical-slider2', { ...params2, invert: true });
   // initSettings('#slider-settings');
 });
