@@ -23,9 +23,9 @@ class View extends Observer {
   constructor(parentHTML: HTMLElement | Element, props: TSliderProps | any) {
     super();
 
-    const { invert, vertical, range, fill } = props;
+    const { invert, vertical, range, fill, thumb, invertThumb } = props;
     this.#props = props;
-    this.#controls = new Controls({ invert, vertical, range });
+    this.#controls = new Controls({ invert, vertical, range, thumb, invertThumb });
     this.#bar = new Bar({ invert, vertical, fill });
     this.#fields = new Fields({ range });
     this.#container = new Container({ invert, vertical });
@@ -41,11 +41,11 @@ class View extends Observer {
 
   setFrom(value: number, percent: number) {
     this.#fields.setFrom(value);
-    this.#controls.setFromPercent(percent);
+    this.#controls.setFromPercent(percent, value);
   }
   setTo(value: number, percent: number) {
     this.#fields.setTo(value);
-    this.#controls.setToPercent(percent);
+    this.#controls.setToPercent(percent, value);
   }
   setBarFillStyle(fromPercent: number, toPercent: number) {
     this.#bar.setFillStyle(fromPercent, toPercent);

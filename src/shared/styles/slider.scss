@@ -78,6 +78,39 @@
       }
     }
   }
+  &__thumb {
+    position: absolute;
+    background-color: lightgrey;
+    pointer-events: none;
+    bottom: $knobSize + 4px;
+    padding: 4px;
+    left: 0;
+    transform: translateX(-50%);
+
+    &.invert {
+      bottom: auto;
+      top: $knobSize + 4px;
+      right: 0;
+      left: auto;
+      transform: translateX(50%);
+    }
+
+    &.vertical {
+      right: $knobSize + 4px;
+      left: auto;
+      top: auto;
+      bottom: 0;
+      transform: translateY(50%);
+
+      &.invert {
+        left: $knobSize + 4px;
+        right: auto;
+        top: 0;
+        bottom: auto;
+        transform: translateY(-50%);
+      }
+    }
+  }
   // screen reader only
   &__input {
      position: absolute;

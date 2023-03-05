@@ -22,7 +22,7 @@ class Controls extends Observer {
   constructor(props: any) {
     super();
 
-    const { invert, vertical, range } = props;
+    const { invert, vertical, range, invertThumb, thumb } = props;
     this.#props = props;
 
     this.#from = range
@@ -30,16 +30,16 @@ class Controls extends Observer {
           invert,
           vertical,
           knobClasses: KNOB1,
-          thumb: { text: 'from1' },
-          thumbSecond: { text: 'from2' },
+          thumb,
+          invertThumb,
         })
       : null;
     this.#to = new Point({
       invert,
       vertical,
       knobClasses: KNOB2,
-      thumb: { text: 'to1' },
-      thumbSecond: { text: 'to2' },
+      thumb,
+      invertThumb,
     });
 
     this.#boundHandlers = {
@@ -66,11 +66,11 @@ class Controls extends Observer {
 
     return [...from, ...to];
   }
-  setFromPercent(percent: number) {
-    if (this.#from) this.#from.getKnob().setStyle(percent);
+  setFromPercent(percent: number, value: number) {
+    if (this.#from) this.#from.setStyle(percent, value);
   }
-  setToPercent(percent: number) {
-    this.#to.getKnob().setStyle(percent);
+  setToPercent(percent: number, value: number) {
+    this.#to.setStyle(percent, value);
   }
 
   #stopDragging() {

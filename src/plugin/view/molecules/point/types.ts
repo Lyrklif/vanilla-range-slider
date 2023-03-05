@@ -2,14 +2,8 @@ type TPointProps = {
   invert: boolean;
   vertical: boolean;
   knobClasses?: string;
-  thumb?: {
-    text: string;
-    classes?: string;
-  };
-  thumbSecond?: {
-    text: string;
-    classes?: string;
-  };
+  thumb?: boolean;
+  invertThumb?: boolean;
 };
 
 export type { TPointProps };

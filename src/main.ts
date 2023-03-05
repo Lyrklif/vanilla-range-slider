@@ -10,6 +10,7 @@ window.addEventListener('load', () => {
     step: 1,
     range: true,
     fill: true,
+    thumb: true,
   };
   const params2 = {
     min: 0,
@@ -18,11 +19,12 @@ window.addEventListener('load', () => {
     vertical: true,
     range: true,
     fill: true,
+    thumb: true,
   };
 
   initSlider('#horizontal-slider', params1);
-  initSlider('#horizontal-slider2', { ...params1, invert: true });
+  initSlider('#horizontal-slider2', { ...params1, invert: true, invertThumb: true });
   initSlider('#vertical-slider', params2);
-  initSlider('#vertical-slider2', { ...params2, invert: true });
+  initSlider('#vertical-slider2', { ...params2, invert: true, invertThumb: true });
   // initSettings('#slider-settings');
 });

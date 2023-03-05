@@ -5,28 +5,32 @@ import Thumb from '../../atoms/thumb/thumb';
 class Point {
   #knob: Knob;
   #thumb: Thumb | null;
-  #thumbSecond: Thumb | null;
 
   constructor(props: TPointProps) {
-    const { invert, vertical, thumb, thumbSecond, knobClasses } = props;
+    const { invert, vertical, thumb, knobClasses, invertThumb } = props;
 
     this.#knob = new Knob({ invert, vertical, classes: knobClasses });
-    this.#thumb = thumb ? new Thumb({ invert, vertical, text: thumb.text }) : null;
-    this.#thumbSecond = thumbSecond ? new Thumb({ invert, vertical, text: thumbSecond.text }) : null;
+    this.#thumb = thumb ? new Thumb({ invert, invertThumb, vertical }) : null;
   }
 
   getKnob() {
     return this.#knob;
   }
 
+  setStyle(percent: number, value: number) {
+    this.#knob.setStyle(percent);
+    if (this.#thumb) {
+      this.#thumb.setStyle(percent);
+      this.#thumb.setText(`${value}`);
+    }
+  }
+
   getHTMLChildren(): Array<HTMLDivElement | HTMLButtonElement> {
     const knob = this.#knob.getHTML();
     const thumb = this.#thumb?.getHTML();
-    const thumb2 = this.#thumbSecond?.getHTML();
 
     const array: Array<HTMLDivElement | HTMLButtonElement> = [knob];
     if (thumb) array.push(thumb);
-    if (thumb2) array.push(thumb2);
 
     return array;
   }

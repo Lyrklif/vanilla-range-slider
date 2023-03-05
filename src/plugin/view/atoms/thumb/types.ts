@@ -1,6 +1,7 @@
 type TThumbProps = {
-  invert: boolean;
   vertical: boolean;
+  invert: boolean;
+  invertThumb?: boolean;
   classes?: string;
   text?: string;
 };
