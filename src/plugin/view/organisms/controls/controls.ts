@@ -2,24 +2,28 @@ import Point from '../../molecules/point/point';
 import { KNOB1, KNOB2 } from '../../../constants/classes';
 import Observer from '../../../observer/observer';
 import { NOTICE } from '../../../types/notive';
-import { DRAGGING } from './type';
+import { DRAGGING, DIRECTION_CODE, STEP } from './type';
 import type { TDragging } from './type';
 
 class Controls extends Observer {
   #from: Point | null;
   #to: Point;
+  #props;
   #boundHandlers: {
     moveFrom: (event: MouseEvent) => void;
     moveTo: (event: MouseEvent) => void;
     stopDragging: () => void;
     startFrom: (event: MouseEvent) => void;
     startTo: (event: MouseEvent) => void;
+    arrowFrom: (event: KeyboardEvent) => void;
+    arrowTo: (event: KeyboardEvent) => void;
   };
 
   constructor(props: any) {
     super();
 
     const { invert, vertical, range } = props;
+    this.#props = props;
 
     this.#from = range
       ? new Point({
@@ -44,13 +48,16 @@ class Controls extends Observer {
       stopDragging: this.#stopDragging.bind(this),
       startFrom: this.#startDragging.bind(this, DRAGGING.from),
       startTo: this.#startDragging.bind(this, DRAGGING.to),
+      arrowFrom: this.#arrowEvent.bind(this, DRAGGING.from),
+      arrowTo: this.#arrowEvent.bind(this, DRAGGING.to),
     };
 
     if (this.#from) {
       this.#from.getKnob().getHTML().addEventListener('mousedown', this.#boundHandlers.startFrom);
+      this.#from.getKnob().getHTML().addEventListener('keydown', this.#boundHandlers.arrowFrom);
     }
     this.#to.getKnob().getHTML().addEventListener('mousedown', this.#boundHandlers.startTo);
-    this.#to.getKnob().getHTML().addEventListener('keydown', this.#arrowEvent);
+    this.#to.getKnob().getHTML().addEventListener('keydown', this.#boundHandlers.arrowTo);
   }
 
   getHTMLChildren() {
@@ -80,13 +87,26 @@ class Controls extends Observer {
   #moveHandler(type: NOTICE.moveFrom | NOTICE.moveTo, event: MouseEvent) {
     this.notify(type, event);
   }
-  #arrowEvent(event: KeyboardEvent) {
+  #arrowEvent(knobVariant: DRAGGING.from | DRAGGING.to, event: KeyboardEvent) {
+    const { invert, vertical } = this.#props;
     const { code } = event;
-    console.log('TTT', code);
-    // const isLeft = code === 'ArrowLeft';
-    // const isRight = code === 'ArrowRight';
-    // const isTop = code === 'ArrowUp';
-    // const isBottom = code === 'ArrowDown';
+
+    const isPlus: boolean =
+      (!vertical && !invert && code === DIRECTION_CODE.right) ||
+      (!vertical && invert && code === DIRECTION_CODE.left) ||
+      (vertical && !invert && code === DIRECTION_CODE.top) ||
+      (vertical && invert && code === DIRECTION_CODE.bottom);
+
+    const isMinus: boolean =
+      (!vertical && !invert && code === DIRECTION_CODE.left) ||
+      (!vertical && invert && code === DIRECTION_CODE.right) ||
+      (vertical && !invert && code === DIRECTION_CODE.bottom) ||
+      (vertical && invert && code === DIRECTION_CODE.top);
+
+    if (isPlus || isMinus) {
+      const type = isPlus ? STEP.plus : STEP.minus;
+      this.notify(NOTICE.step, { knob: knobVariant, type: type });
+    }
   }
 }
 

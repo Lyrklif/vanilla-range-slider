@@ -1,4 +1,4 @@
-import { MIN_PERCENT } from '../constants/percents';
+import { MAX_PERCENT, MIN_PERCENT } from '../constants/percents';
 
 import Model from '../model/model';
 import View from '../view/View';
@@ -6,6 +6,7 @@ import Observer from '../observer/observer';
 
 import type { TSliderProps } from './types';
 import { NOTICE } from '../types/notive';
+import { DRAGGING, STEP } from '../view/organisms/controls/type';
 
 class Controller extends Observer {
   #model: Model;
@@ -24,6 +25,7 @@ class Controller extends Observer {
     this.#view.subscribe(NOTICE.moveFrom, this.#moveKnobFrom.bind(this));
     this.#view.subscribe(NOTICE.moveTo, this.#moveKnobTo.bind(this));
     this.#view.subscribe(NOTICE.barClick, this.#barClick.bind(this));
+    this.#view.subscribe(NOTICE.step, this.#moveStep.bind(this));
 
     this.#updateSizes();
     this.#updFillStyle();
@@ -80,6 +82,26 @@ class Controller extends Observer {
     } else {
       this.#moveKnobFrom(props);
     }
+  }
+  #getPercentByValue(value: number, min: number, max: number): number {
+    if (min === max) return 0;
+    return ((value - min) / (max - min)) * MAX_PERCENT;
+  }
+  #moveStep(props: { type: STEP.plus | STEP.minus; knob: DRAGGING.from | DRAGGING.to }) {
+    const { type, knob } = props;
+    const { step, max, min } = this.#model.getSettings();
+    const { value: fromValue } = this.#model.getFromControlState();
+    const { value: toValue } = this.#model.getToControlState();
+
+    const isPlus = type === STEP.plus;
+    const isTo = knob === DRAGGING.to;
+    const currentStep = isPlus ? step : -step;
+    let value = isTo ? toValue + currentStep : fromValue + currentStep;
+    value = isPlus ? Math.min(value, max) : Math.max(value, min);
+    const percent = this.#getPercentByValue(value, min, max);
+
+    if (isTo) this.#moveKnobTo({ percent, value });
+    else this.#moveKnobFrom({ percent, value });
   }
 }
 

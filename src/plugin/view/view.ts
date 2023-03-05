@@ -7,6 +7,7 @@ import Bar from './organisms/bar/bar';
 import Fields from './molecules/fields/fields';
 import { NOTICE } from '../types/notive';
 import { MAX_PERCENT } from '../constants/percents';
+import { DRAGGING, STEP } from './organisms/controls/type';
 
 class View extends Observer {
   #props: TSliderProps | any;
@@ -71,6 +72,7 @@ class View extends Observer {
   #handleEvents() {
     this.#controls.subscribe(NOTICE.moveFrom, this.#boundHandlers.moveFrom);
     this.#controls.subscribe(NOTICE.moveTo, this.#boundHandlers.moveTo);
+    this.#controls.subscribe(NOTICE.step, this.#moveByStep.bind(this));
     this.#bar.subscribe(NOTICE.barClick, this.#barClick.bind(this));
     window.addEventListener('resize', this.#resizeHandler.bind(this));
   }
@@ -124,6 +126,9 @@ class View extends Observer {
     const range = max - min;
     const value = min + (percent * range) / MAX_PERCENT;
     return Math.round((value - min) / step) * step + min;
+  }
+  #moveByStep(props: { type: STEP.plus | STEP.minus; knob: DRAGGING.from | DRAGGING.to }) {
+    this.notify(NOTICE.step, props);
   }
 }
 
