@@ -1,5 +1,6 @@
 import type { TSliderProps, TSliderSettings } from '../controller/types';
 import type { TSliderState, TContainer, TBar, TControl } from './types';
+import { MIN_PERCENT } from '../constants/percents';
 
 class Model {
   #settings: TSliderSettings;
@@ -7,7 +8,7 @@ class Model {
 
   constructor(settings: TSliderProps) {
     this.#settings = {
-      min: settings.min ?? 0,
+      min: settings.min,
       max: settings.max,
       step: settings.step || 1,
       invert: !!settings.invert,
@@ -25,12 +26,12 @@ class Model {
         width: 0,
       },
       from: {
-        value: 0,
-        percent: 0,
+        value: this.#settings.min,
+        percent: MIN_PERCENT,
       },
       to: {
-        value: 0,
-        percent: 0,
+        value: this.#settings.min,
+        percent: MIN_PERCENT,
       },
     };
   }

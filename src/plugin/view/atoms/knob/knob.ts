@@ -14,7 +14,7 @@ class Knob {
     return this.#elem;
   }
 
-  setStyle(percent: number): void {
+  setStyle(percent: number) {
     const side = this.#getSide();
     this.#elem.style[side] = `${percent}%`;
   }

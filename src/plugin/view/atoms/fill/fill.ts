@@ -15,7 +15,7 @@ class Fill {
     return this.#elem;
   }
 
-  setStyle(startPercent: number, endPercent: number): void {
+  setStyle(startPercent: number, endPercent: number) {
     const { vertical } = this.#props;
     const side = this.#getSide();
     const maxSize = vertical ? 'maxHeight' : 'maxWidth';

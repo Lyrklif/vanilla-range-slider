@@ -5,6 +5,7 @@ import View from '../view/View';
 import Observer from '../observer/observer';
 
 import type { TSliderProps } from './types';
+import { NOTICE } from '../types/notive';
 
 class Controller extends Observer {
   #model: Model;
@@ -19,19 +20,20 @@ class Controller extends Observer {
       to: this.#model.getToControlState(),
     });
 
-    this.#view.subscribe('onResize', this.#updateSizes.bind(this));
-    this.#view.subscribe('onMouseMoveFrom', this.#moveKnobFrom.bind(this));
-    this.#view.subscribe('onMouseMoveTo', this.#moveKnobTo.bind(this));
+    this.#view.subscribe(NOTICE.resize, this.#updateSizes.bind(this));
+    this.#view.subscribe(NOTICE.moveFrom, this.#moveKnobFrom.bind(this));
+    this.#view.subscribe(NOTICE.moveTo, this.#moveKnobTo.bind(this));
 
     this.#updateSizes();
     this.#updFillStyle();
+    this.#moveKnobFrom(this.#model.getFromControlState());
+    this.#moveKnobTo(this.#model.getToControlState());
   }
 
   #updateSizes() {
-    const { height, width } = this.#view.getBar().getSize();
-    const offsets = this.#view.getContainer().getOffsets();
+    const { height, width, top, left } = this.#view.getSizes();
 
-    this.#model.setContainerState(offsets);
+    this.#model.setContainerState({ top, left });
     this.#model.setBarState({ height, width });
   }
   #updFillStyle() {
@@ -39,22 +41,20 @@ class Controller extends Observer {
     const { percent: fromPercent } = this.#model.getFromControlState();
     const { percent: toPercent } = this.#model.getToControlState();
     if (range) {
-      this.#view.getBar().setFillStyle(fromPercent, toPercent - fromPercent);
+      this.#view.setBarFillStyle(fromPercent, toPercent - fromPercent);
     } else {
-      this.#view.getBar().setFillStyle(MIN_PERCENT, toPercent);
+      this.#view.setBarFillStyle(MIN_PERCENT, toPercent);
     }
   }
   #moveKnobFrom(props: { value: number; percent: number }) {
     const { value, percent } = props;
-    this.#view.getFields().setFrom(value);
-    this.#view.getControls().setFromPercent(percent);
+    this.#view.setFrom(value, percent);
     this.#model.setFromControlState({ value, percent });
     this.#updFillStyle();
   }
   #moveKnobTo(props: { value: number; percent: number }) {
     const { value, percent } = props;
-    this.#view.getFields().setTo(value);
-    this.#view.getControls().setToPercent(percent);
+    this.#view.setTo(value, percent);
     this.#model.setToControlState({ value, percent });
     this.#updFillStyle();
   }

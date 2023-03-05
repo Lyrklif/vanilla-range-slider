@@ -19,7 +19,7 @@ class Point {
     return this.#knob;
   }
 
-  getArrayHTML(): Array<HTMLDivElement | HTMLButtonElement> {
+  getHTMLChildren(): Array<HTMLDivElement | HTMLButtonElement> {
     const knob = this.#knob.getHTML();
     const thumb = this.#thumb?.getHTML();
     const thumb2 = this.#thumbSecond?.getHTML();

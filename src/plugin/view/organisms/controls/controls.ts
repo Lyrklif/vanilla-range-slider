@@ -54,8 +54,8 @@ class Controls extends Observer {
   }
 
   getHTMLChildren() {
-    const from = this.#from?.getArrayHTML() || [];
-    const to = this.#to.getArrayHTML();
+    const from = this.#from?.getHTMLChildren() || [];
+    const to = this.#to.getHTMLChildren();
 
     return [...from, ...to];
   }

@@ -10,10 +10,10 @@ import { MAX_PERCENT } from '../constants/percents';
 
 class View extends Observer {
   #props: TSliderProps | any;
-  #controls;
-  #bar;
-  #fields;
-  #container;
+  #controls: Controls;
+  #bar: Bar;
+  #fields: Fields;
+  #container: Container;
   #boundHandlers: {
     moveFrom: (event: MouseEvent) => void;
     moveTo: (event: MouseEvent) => void;
@@ -34,25 +34,25 @@ class View extends Observer {
       moveTo: this.moveToPosition.bind(this, NOTICE.moveTo),
     };
 
+    this.#handleEvents();
     this.#display(parentHTML);
-    window.addEventListener('resize', this.#resizeHandler.bind(this));
-
-    this.#controls.subscribe(NOTICE.moveFrom, this.#boundHandlers.moveFrom);
-    this.#controls.subscribe(NOTICE.moveTo, this.#boundHandlers.moveTo);
-    this.#bar.subscribe(NOTICE.barClick, this.#boundHandlers.moveFrom);
   }
 
-  getContainer() {
-    return this.#container;
+  setFrom(value: number, percent: number) {
+    this.#fields.setFrom(value);
+    this.#controls.setFromPercent(percent);
   }
-  getControls() {
-    return this.#controls;
+  setTo(value: number, percent: number) {
+    this.#fields.setTo(value);
+    this.#controls.setToPercent(percent);
   }
-  getFields() {
-    return this.#fields;
+  setBarFillStyle(fromPercent: number, toPercent: number) {
+    this.#bar.setFillStyle(fromPercent, toPercent);
   }
-  getBar() {
-    return this.#bar;
+  getSizes(): { height: number; width: number; top: number; left: number } {
+    const { height, width } = this.#bar.getSize();
+    const { top, left } = this.#container.getOffsets();
+    return { height, width, top, left };
   }
   moveToPosition(type: NOTICE.moveFrom | NOTICE.moveTo, event: MouseEvent) {
     const coords: TCoords = this.#getCoordsByEvent(event);
@@ -62,24 +62,30 @@ class View extends Observer {
     this.notify(type, { percent, value });
   }
 
+  #handleEvents() {
+    this.#controls.subscribe(NOTICE.moveFrom, this.#boundHandlers.moveFrom);
+    this.#controls.subscribe(NOTICE.moveTo, this.#boundHandlers.moveTo);
+    this.#bar.subscribe(NOTICE.barClick, this.#boundHandlers.moveFrom);
+    window.addEventListener('resize', this.#resizeHandler.bind(this));
+  }
   #display(parentHTML: HTMLElement | Element) {
-    const controlsHTML = this.#controls.getHTMLChildren();
-    const barHTML = this.#bar.getHTMLChildren();
-    const fieldsHTML = this.#fields.getHTMLChildren();
     const containerHTML = this.#container.getHTML();
-
-    const children = [...fieldsHTML, ...barHTML, ...controlsHTML];
-    containerHTML.append(...children);
-
+    const appendChildren = [
+      ...this.#fields.getHTMLChildren(),
+      ...this.#bar.getHTMLChildren(),
+      ...this.#controls.getHTMLChildren(),
+    ];
+    containerHTML.append(...appendChildren);
     parentHTML.appendChild(containerHTML);
   }
   #resizeHandler(event: Event) {
     this.notify(NOTICE.resize, event);
   }
   #getCoordsByEvent(event: MouseEvent | TouchEvent): TCoords {
-    const clientX = event instanceof MouseEvent ? event.clientX : event.touches[0].clientX;
-    const clientY = event instanceof MouseEvent ? event.clientY : event.touches[0].clientY;
-    return { x: clientX, y: clientY };
+    return {
+      x: event instanceof MouseEvent ? event.clientX : event.touches[0].clientX,
+      y: event instanceof MouseEvent ? event.clientY : event.touches[0].clientY,
+    };
   }
   #getExternalOffset(): TSliderCoords {
     const offsets = this.#container.getOffsets();
@@ -95,12 +101,12 @@ class View extends Observer {
   #getPercentByCoords(coords: TCoords): number {
     const { invert, vertical, step } = this.#props;
     const barLength = this.#getBarLength();
-    const externalOffset: TSliderCoords = this.#getExternalOffset();
-    const pos = vertical ? coords.y : coords.x;
+    const externalOffset = this.#getExternalOffset();
+    const position = vertical ? coords.y : coords.x;
     const start = vertical ? externalOffset.y : externalOffset.x;
     const end = start + barLength;
-    const offset = Math.max(start, Math.min(pos, end)) - start;
-    const percent = (offset * MAX_PERCENT) / barLength;
+    const offset = Math.max(start, Math.min(position, end)) - start;
+    const percent = (offset / barLength) * MAX_PERCENT;
     const roundedPercent = Math.round(percent / step) * step;
     const percentForHorizontal = invert ? MAX_PERCENT - roundedPercent : roundedPercent;
     const percentForVertical = invert ? roundedPercent : MAX_PERCENT - roundedPercent;
@@ -110,7 +116,7 @@ class View extends Observer {
   #getValueByPercent(percent: number): number {
     const { min, max, step } = this.#props;
     const range = max - min;
-    const value = min + percent * (range / 100);
+    const value = min + (percent * range) / MAX_PERCENT;
     return Math.round((value - min) / step) * step + min;
   }
 }

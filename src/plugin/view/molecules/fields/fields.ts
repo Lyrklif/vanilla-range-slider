@@ -2,8 +2,8 @@ import type { TFieldsProps } from './types';
 import Input from '../../atoms/input/input';
 
 class Fields {
-  #from;
-  #to;
+  #from: Input | null;
+  #to: Input;
 
   constructor(props: TFieldsProps) {
     const { range } = props;

@@ -12,20 +12,18 @@ class Observer {
     this.#subscribers = [];
   }
 
-  subscribe(name: string, fn: TSubscriberFn): void {
+  subscribe(name: string, fn: TSubscriberFn) {
     this.#subscribers.push({ name, fn });
   }
 
-  unsubscribe(name: string, fn: TSubscriberFn): void {
+  unsubscribe(name: string, fn: TSubscriberFn) {
     this.#subscribers = this.#subscribers.filter((subscriber) => {
       return !(subscriber.fn === fn && subscriber.name === name);
     });
   }
 
-  notify(name: string, data: any): void {
-    this.#subscribers
-      .filter((subscriber) => subscriber.name === name)
-      .forEach((subscriber) => subscriber.fn(data));
+  notify(name: string, data: any) {
+    this.#subscribers.filter((subscriber) => subscriber.name === name).forEach((subscriber) => subscriber.fn(data));
   }
 }
 

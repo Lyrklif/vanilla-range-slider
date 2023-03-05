@@ -1,4 +1,4 @@
-const initSettings = (selector: string): void => {
+const initSettings = (selector: string) => {
   const settings = document.querySelector(selector);
 };
 
