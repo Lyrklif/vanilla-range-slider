@@ -41,7 +41,9 @@ class Controller extends Observer {
     const { percent: fromPercent } = this.#model.getFromControlState();
     const { percent: toPercent } = this.#model.getToControlState();
     if (range) {
-      this.#view.setBarFillStyle(fromPercent, toPercent - fromPercent);
+      const start = Math.min(fromPercent, toPercent);
+      const end = Math.max(fromPercent, toPercent);
+      this.#view.setBarFillStyle(start, end - start);
     } else {
       this.#view.setBarFillStyle(MIN_PERCENT, toPercent);
     }
