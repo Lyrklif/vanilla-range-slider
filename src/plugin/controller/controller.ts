@@ -28,7 +28,6 @@ class Controller extends Observer {
     this.#view.subscribe(NOTICE.step, this.#moveStep.bind(this));
 
     this.#updateSizes();
-    this.#updFillStyle();
     this.#moveKnobFrom(this.#model.getFromControlState());
     this.#moveKnobTo(this.#model.getToControlState());
   }

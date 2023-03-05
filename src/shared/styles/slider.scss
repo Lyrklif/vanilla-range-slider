@@ -1,5 +1,6 @@
 .range-slider {
-  $knobSize: 20px;
+  $knobSize: 15px !default;
+  $lineSize: 5px !default;
 
   position: relative;
   width: 100%;
@@ -14,17 +15,17 @@
 
   &__line {
     width: 100%;
-    height: $knobSize;
+    height: $lineSize;
     background-color: lightgray;
 
     &.vertical {
       height: 100%;
-      width: $knobSize;
+      width: $lineSize;
     }
   }
   &__fill {
     background-color: rosybrown;
-    height: $knobSize;
+    height: 100%;
     width: 100%;
     position: absolute;
     pointer-events: none;
@@ -40,8 +41,6 @@
       bottom: 0;
       top: auto;
       left: 0;
-      height: 100%;
-      width: $knobSize;
 
       &.invert {
         top: auto;
@@ -55,26 +54,26 @@
     position: absolute;
     background-color: grey;
     cursor: pointer;
-    top: 0;
+    top: 50%;
     left: 0;
-    transform: translateX(-50%);
+    transform: translate(-50%,-50%);
 
     &.invert {
       right: 0;
       left: auto;
-      transform: translateX(50%);
+      transform: translate(50%, -50%);
     }
 
     &.vertical {
-      left: 0;
+      left: 50%;
       top: auto;
       bottom: 0;
-      transform: translateY(50%);
+      transform: translate(-50%, 50%);
 
       &.invert {
         top: 0;
         bottom: auto;
-        transform: translateY(-50%);
+        transform: translate(-50%, -50%);
       }
     }
   }
