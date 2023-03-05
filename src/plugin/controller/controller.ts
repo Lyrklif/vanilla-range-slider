@@ -23,6 +23,7 @@ class Controller extends Observer {
     this.#view.subscribe(NOTICE.resize, this.#updateSizes.bind(this));
     this.#view.subscribe(NOTICE.moveFrom, this.#moveKnobFrom.bind(this));
     this.#view.subscribe(NOTICE.moveTo, this.#moveKnobTo.bind(this));
+    this.#view.subscribe(NOTICE.barClick, this.#barClick.bind(this));
 
     this.#updateSizes();
     this.#updFillStyle();
@@ -59,6 +60,26 @@ class Controller extends Observer {
     this.#view.setTo(value, percent);
     this.#model.setToControlState({ value, percent });
     this.#updFillStyle();
+  }
+  #barClick(props: { value: number; percent: number }) {
+    const { range } = this.#model.getSettings();
+    const { percent } = props;
+    const { percent: fromPercent } = this.#model.getFromControlState();
+    const { percent: toPercent } = this.#model.getToControlState();
+
+    const distanceFrom = Math.abs(fromPercent - percent);
+    const distanceTo = Math.abs(toPercent - percent);
+
+    if (!range) {
+      this.#moveKnobTo(props);
+      return;
+    }
+
+    if (distanceTo <= distanceFrom) {
+      this.#moveKnobTo(props);
+    } else {
+      this.#moveKnobFrom(props);
+    }
   }
 }
 

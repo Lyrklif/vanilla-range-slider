@@ -1,5 +1,6 @@
 import type { TFieldsProps } from './types';
 import Input from '../../atoms/input/input';
+import { INPUT_NAMES } from '../../atoms/input/types';
 
 class Fields {
   #from: Input | null;
@@ -8,8 +9,8 @@ class Fields {
   constructor(props: TFieldsProps) {
     const { range } = props;
 
-    this.#from = range ? new Input() : null;
-    this.#to = new Input();
+    this.#from = range ? new Input(INPUT_NAMES.from) : null;
+    this.#to = new Input(INPUT_NAMES.to);
   }
 
   setFrom(value: number | string) {

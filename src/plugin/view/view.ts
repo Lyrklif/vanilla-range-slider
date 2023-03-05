@@ -61,11 +61,17 @@ class View extends Observer {
 
     this.notify(type, { percent, value });
   }
+  #barClick(event: MouseEvent | TouchEvent) {
+    const coords: TCoords = this.#getCoordsByEvent(event);
+    const percent: number = this.#getPercentByCoords(coords);
+    const value: number = this.#getValueByPercent(percent);
 
+    this.notify(NOTICE.barClick, { percent, value });
+  }
   #handleEvents() {
     this.#controls.subscribe(NOTICE.moveFrom, this.#boundHandlers.moveFrom);
     this.#controls.subscribe(NOTICE.moveTo, this.#boundHandlers.moveTo);
-    this.#bar.subscribe(NOTICE.barClick, this.#boundHandlers.moveFrom);
+    this.#bar.subscribe(NOTICE.barClick, this.#barClick.bind(this));
     window.addEventListener('resize', this.#resizeHandler.bind(this));
   }
   #display(parentHTML: HTMLElement | Element) {
