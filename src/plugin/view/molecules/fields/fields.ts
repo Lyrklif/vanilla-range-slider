@@ -7,10 +7,10 @@ class Fields {
   #to: Input;
 
   constructor(props: TFieldsProps) {
-    const { range } = props;
+    const { range, inputNameFrom, inputNameTo } = props;
 
-    this.#from = range ? new Input(INPUT_NAMES.from) : null;
-    this.#to = new Input(INPUT_NAMES.to);
+    this.#from = range ? new Input(inputNameFrom || INPUT_NAMES.from) : null;
+    this.#to = new Input(inputNameTo || INPUT_NAMES.to);
   }
 
   setFrom(value: number | string) {

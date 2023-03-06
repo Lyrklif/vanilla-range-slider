@@ -14,6 +14,8 @@ type TSliderProps = {
   range?: boolean;
   fill?: boolean;
   invertThumb?: boolean;
+  inputNameFrom?: string;
+  inputNameTo?: string;
   mode: TMode;
   classes?: {
     container?: string;
