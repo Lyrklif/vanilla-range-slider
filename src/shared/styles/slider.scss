@@ -1,6 +1,21 @@
 .range-slider {
-  $knobSize: 15px !default;
-  $lineSize: 5px !default;
+  $lineSize: 8px !default;
+  $knobSize: 16px !default;
+  $thumbOffset: 25px !default;
+  $markHeight: 10px !default;
+  $borderRadius: 4px !default;
+  $defaultColor: #b9d2ce !default;
+  $activeColor: #16baba94 !default;
+  $whiteColor: white !default;
+  $markColor: #b9d2ceba !default;
+  $textColor: #536e98 !default;
+  $transitionDelay: 50ms !default;
+  $transitionControls:
+          left $transitionDelay,
+          right $transitionDelay,
+          top $transitionDelay,
+          bottom $transitionDelay
+  !default;
 
   position: relative;
   width: 100%;
@@ -16,7 +31,8 @@
   &__line {
     width: 100%;
     height: $lineSize;
-    background-color: lightgray;
+    border-radius: $borderRadius;
+    box-shadow: inset 0 0 2px 1px $defaultColor;
 
     &.vertical {
       height: 100%;
@@ -24,7 +40,8 @@
     }
   }
   &__fill {
-    background-color: rosybrown;
+    box-shadow: inset 0 0 5px 1px $activeColor;
+    border-radius: $borderRadius;
     height: 100%;
     width: 100%;
     position: absolute;
@@ -52,11 +69,15 @@
     height: $knobSize;
     width: $knobSize;
     position: absolute;
-    background-color: grey;
     cursor: pointer;
     top: 50%;
     left: 0;
     transform: translate(-50%,-50%);
+    border-radius: $borderRadius;
+    border: 1px solid $activeColor;
+    background-color: $whiteColor;
+    box-shadow: inset 0 0 2px 1px $activeColor;
+    transition: $transitionControls;
 
     &.invert {
       right: 0;
@@ -79,30 +100,35 @@
   }
   &__thumb {
     position: absolute;
-    background-color: lightgrey;
+    border: 1px solid $activeColor;
+    border-radius: $borderRadius;
+    background-color: $whiteColor;
+    box-shadow: inset 0 0 3px 1px $activeColor;
     pointer-events: none;
-    bottom: $knobSize + 4px;
+    bottom: $thumbOffset;
     padding: 4px;
     left: 0;
     transform: translateX(-50%);
+    color: $textColor;
+    transition: $transitionControls;
 
     &.invert {
       bottom: auto;
-      top: $knobSize + 4px;
+      top: $thumbOffset;
       right: 0;
       left: auto;
       transform: translateX(50%);
     }
 
     &.vertical {
-      right: $knobSize + 4px;
+      right: $thumbOffset;
       left: auto;
       top: auto;
       bottom: 0;
       transform: translateY(50%);
 
       &.invert {
-        left: $knobSize + 4px;
+        left: $thumbOffset;
         right: auto;
         top: 0;
         bottom: auto;
@@ -110,7 +136,23 @@
       }
     }
   }
-  // screen reader only
+  &__scale {
+    position: absolute;
+    display: block;
+    width: 100%;
+
+    &.vertical {
+      height: 100%;
+    }
+  }
+  &__mark {
+    position: absolute;
+    display: inline-block;
+    height: $markHeight;
+    width: 1px;
+    background-color: $markColor;
+    color: $textColor;
+  }
   &__input {
      position: absolute;
      left: -10000px;
