@@ -1,11 +1,11 @@
 {
   "name": "vanilla-slider-ts",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "homepage": "https://lyrklif.github.io/vanilla-range-slider/",
   "scripts": {
-    "dev": "vite --host",
+    "dev": "vite --host --base /",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "lint:scripts": "eslint . --ext .ts",
@@ -32,6 +32,7 @@
     "prettier": "^2.8.4",
     "stylelint": "^15.1.0",
     "stylelint-config-recommended": "^10.0.1",
-    "stylelint-config-standard-scss": "^7.0.0"
+    "stylelint-config-standard-scss": "^7.0.0",
+    "vite-plugin-html": "^3.2.0"
   }
 }
