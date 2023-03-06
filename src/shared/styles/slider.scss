@@ -111,6 +111,8 @@
     transform: translateX(-50%);
     color: $textColor;
     transition: $transitionControls;
+    min-width: 1em;
+    text-align: center;
 
     &.invert {
       bottom: auto;
