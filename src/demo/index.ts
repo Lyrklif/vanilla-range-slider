@@ -10,8 +10,8 @@ const initDemoVariants = () => {
     range: true,
     fill: true,
     thumb: true,
-    mode: modeStrict,
-    scale: true,
+    mode: modeFree,
+    // scale: true,
   };
   const params2: TSliderProps = {
     min: 0,
@@ -22,7 +22,7 @@ const initDemoVariants = () => {
     fill: true,
     thumb: true,
     mode: modeFree,
-    scale: true,
+    // scale: true,
   };
 
   const elem1 = document.getElementById('horizontal-slider');
@@ -31,13 +31,13 @@ const initDemoVariants = () => {
   const elem4 = document.getElementById('vertical-slider2');
 
   if (elem1) {
-    new VanillaRangeSlider(elem1, params1);
+    new VanillaRangeSlider(elem1, { ...params1, mode: modeStrict });
   }
   if (elem2) {
     new VanillaRangeSlider(elem2, { ...params1, invert: true, invertThumb: true });
   }
   if (elem3) {
-    new VanillaRangeSlider(elem3, params2);
+    new VanillaRangeSlider(elem3, { ...params2, mode: modeStrict });
   }
   if (elem4) {
     new VanillaRangeSlider(elem4, { ...params2, invert: true, invertThumb: true });
