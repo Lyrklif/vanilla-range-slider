@@ -12,6 +12,7 @@ window.addEventListener('load', () => {
     fill: true,
     thumb: true,
     mode: 'strict',
+    scale: true,
   };
   const params2 = {
     min: 0,
@@ -22,6 +23,7 @@ window.addEventListener('load', () => {
     fill: true,
     thumb: true,
     mode: 'strict',
+    scale: true,
   };
 
   initSlider('#horizontal-slider', params1);

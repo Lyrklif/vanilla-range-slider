@@ -23,10 +23,10 @@ class View extends Observer {
   constructor(parentHTML: HTMLElement | Element, props: TSliderProps | any) {
     super();
 
-    const { invert, vertical, range, fill, thumb, invertThumb } = props;
+    const { invert, vertical, range, fill, thumb, invertThumb, scale, min, max, step } = props;
     this.#props = props;
     this.#controls = new Controls({ invert, vertical, range, thumb, invertThumb });
-    this.#bar = new Bar({ invert, vertical, fill });
+    this.#bar = new Bar({ invert, vertical, fill, scale, min, max, step });
     this.#fields = new Fields({ range });
     this.#container = new Container({ invert, vertical });
 
