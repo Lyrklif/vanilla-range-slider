@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "lint:scripts": "eslint . --ext .ts",
     "lint:styles": "stylelint ./**/*.{css,scss}",
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
   "devDependencies": {
