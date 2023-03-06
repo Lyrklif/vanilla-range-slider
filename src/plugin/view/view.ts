@@ -100,8 +100,8 @@ class View extends Observer {
   #getExternalOffset(): TSliderCoords {
     const offsets = this.#container.getOffsets();
     return {
-      x: offsets.left + window.scrollX,
-      y: offsets.top + window.scrollY,
+      x: offsets.left,
+      y: offsets.top,
     };
   }
   #getBarLength(): number {
