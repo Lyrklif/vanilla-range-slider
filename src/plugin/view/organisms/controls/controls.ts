@@ -10,11 +10,11 @@ class Controls extends Observer {
   #to: Point;
   #props;
   #boundHandlers: {
-    moveFrom: (event: MouseEvent) => void;
-    moveTo: (event: MouseEvent) => void;
+    moveFrom: (event: MouseEvent | TouchEvent) => void;
+    moveTo: (event: MouseEvent | TouchEvent) => void;
     stopDragging: () => void;
-    startFrom: (event: MouseEvent) => void;
-    startTo: (event: MouseEvent) => void;
+    startFrom: (event: MouseEvent | TouchEvent) => void;
+    startTo: (event: MouseEvent | TouchEvent) => void;
     arrowFrom: (event: KeyboardEvent) => void;
     arrowTo: (event: KeyboardEvent) => void;
   };
@@ -54,9 +54,11 @@ class Controls extends Observer {
 
     if (this.#from) {
       this.#from.getKnob().getHTML().addEventListener('mousedown', this.#boundHandlers.startFrom);
+      this.#from.getKnob().getHTML().addEventListener('touchstart', this.#boundHandlers.startFrom);
       this.#from.getKnob().getHTML().addEventListener('keydown', this.#boundHandlers.arrowFrom);
     }
     this.#to.getKnob().getHTML().addEventListener('mousedown', this.#boundHandlers.startTo);
+    this.#to.getKnob().getHTML().addEventListener('touchstart', this.#boundHandlers.startTo);
     this.#to.getKnob().getHTML().addEventListener('keydown', this.#boundHandlers.arrowTo);
   }
 
@@ -75,14 +77,19 @@ class Controls extends Observer {
 
   #stopDragging() {
     document.removeEventListener('mousemove', this.#boundHandlers.moveFrom);
+    document.removeEventListener('touchmove', this.#boundHandlers.moveFrom);
     document.removeEventListener('mousemove', this.#boundHandlers.moveTo);
+    document.removeEventListener('touchmove', this.#boundHandlers.moveTo);
     document.removeEventListener('mouseup', this.#boundHandlers.stopDragging);
+    document.removeEventListener('touchend', this.#boundHandlers.stopDragging);
   }
   #startDragging(type: TDragging) {
     document.addEventListener('mousemove', this.#boundHandlers[type]);
+    document.addEventListener('touchmove', this.#boundHandlers[type]);
     document.addEventListener('mouseup', this.#boundHandlers.stopDragging);
+    document.addEventListener('touchend', this.#boundHandlers.stopDragging);
   }
-  #moveHandler(type: NOTICE.moveFrom | NOTICE.moveTo, event: MouseEvent) {
+  #moveHandler(type: NOTICE.moveFrom | NOTICE.moveTo, event: MouseEvent | TouchEvent) {
     this.notify(type, event);
   }
   #arrowEvent(knobVariant: DRAGGING.from | DRAGGING.to, event: KeyboardEvent) {

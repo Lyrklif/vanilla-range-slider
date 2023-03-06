@@ -78,6 +78,8 @@
     background-color: $whiteColor;
     box-shadow: inset 0 0 2px 1px $activeColor;
     transition: $transitionControls;
+    user-select: none;
+    touch-action: none;
 
     &.invert {
       right: 0;
