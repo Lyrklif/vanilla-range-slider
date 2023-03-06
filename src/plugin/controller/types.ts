@@ -1,9 +1,7 @@
-enum MODE {
-  free = 'free',
-  strict = 'strict',
-}
+const modeStrict = 'strict';
+const modeFree = 'free';
 
-type TMode = MODE.free | MODE.strict;
+type TMode = 'free' | 'strict';
 
 type TSliderProps = {
   min: number;
@@ -13,9 +11,11 @@ type TSliderProps = {
   vertical?: boolean;
   range?: boolean;
   fill?: boolean;
+  thumb?: boolean;
   invertThumb?: boolean;
   inputNameFrom?: string;
   inputNameTo?: string;
+  scale?: boolean;
   mode: TMode;
   classes?: {
     container?: string;
@@ -35,5 +35,5 @@ type TSliderSettings = {
   range: boolean;
 };
 
-export { MODE };
+export { modeStrict, modeFree };
 export type { TSliderProps, TSliderSettings, TMode };

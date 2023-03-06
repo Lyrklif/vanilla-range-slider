@@ -1,7 +1,7 @@
 import type { TSliderProps, TSliderSettings } from '../controller/types';
 import type { TSliderState, TContainer, TBar, TControl } from './types';
 import { MIN_PERCENT } from '../constants/percents';
-import { MODE } from '../controller/types';
+import { modeFree } from '../controller/types';
 
 class Model {
   #settings: TSliderSettings;
@@ -11,7 +11,7 @@ class Model {
     this.#settings = {
       min: settings.min,
       max: settings.max,
-      mode: settings.mode || MODE.free,
+      mode: settings.mode || modeFree,
       step: settings.step || 1,
       invert: !!settings.invert,
       vertical: !!settings.vertical,

@@ -7,7 +7,7 @@ import Observer from '../observer/observer';
 import type { TSliderProps } from './types';
 import { NOTICE } from '../types/notive';
 import { DRAGGING, STEP } from '../view/organisms/controls/type';
-import { MODE } from './types';
+import { modeStrict } from './types';
 
 class Controller extends Observer {
   #model: Model;
@@ -57,7 +57,7 @@ class Controller extends Observer {
     const { mode } = this.#model.getSettings();
     const { value: oldValue } = this.#model.getFromControlState();
     const { value: valueTo, percent: percentTo } = this.#model.getToControlState();
-    const isStrictMode = mode === MODE.strict;
+    const isStrictMode = mode === modeStrict;
     let currentValue = props.value;
     let currentPercent = props.percent;
 
@@ -80,7 +80,7 @@ class Controller extends Observer {
     const { mode } = this.#model.getSettings();
     const { value: valueFrom, percent: percentFrom } = this.#model.getFromControlState();
     const { value: oldValue } = this.#model.getToControlState();
-    const isStrictMode = mode === MODE.strict;
+    const isStrictMode = mode === modeStrict;
     let currentValue = props.value;
     let currentPercent = props.percent;
 

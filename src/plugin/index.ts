@@ -1,9 +1,7 @@
 import Controller from './controller/controller';
+import type { TSliderProps } from './controller/types';
+import { modeStrict, modeFree } from './controller/types';
 
-const initSlider = (selector: string, params: any) => {
-  const element = document.querySelector(selector);
-  if (!element) return;
-  new Controller(element, params);
-};
-
-export default initSlider;
+export default Controller;
+export type { TSliderProps };
+export { modeStrict, modeFree };
