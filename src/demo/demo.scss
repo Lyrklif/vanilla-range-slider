@@ -1,10 +1,19 @@
 .sliders {
-  margin: 60px auto;
+  margin: 50px auto;
   max-width: min(400px, 90vw);
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.sliders2 {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 60px;
 }
 
 .horizontal-slider {
-  margin-bottom: 70px;
+  margin-top: 50px;
+  margin-bottom: 50px;
   width: 400px;
   max-width: 100%;
 }
