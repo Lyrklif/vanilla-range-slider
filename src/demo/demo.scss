@@ -6,9 +6,12 @@
 }
 
 .sliders2 {
-  display: flex;
-  justify-content: space-around;
   margin-top: 60px;
+
+  &__child {
+    display: inline-block;
+    width: min(40%, 50vw);
+  }
 }
 
 .horizontal-slider {
