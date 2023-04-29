@@ -1,16 +1,15 @@
 import { defineConfig } from 'vite';
-import { createHtmlPlugin } from 'vite-plugin-html';
 import dts from 'vite-plugin-dts';
 import * as path from 'path';
 import replaceAllInserter from 'string.prototype.replaceall';
 
 replaceAllInserter.shim();
-const base = '/vanilla-range-slider/';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [createHtmlPlugin({ minify: true }), dts()],
-  base,
+  plugins: [dts()],
+  base: '/vanilla-range-slider/',
+  publicDir: false,
   build: {
     manifest: true,
     minify: true,

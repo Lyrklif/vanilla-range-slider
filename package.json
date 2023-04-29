@@ -11,7 +11,15 @@
   "bugs": {
     "url": "https://github.com/Lyrklif/vanilla-range-slider/issues"
   },
-  "keywords": ["slider", "vanilla-slider", "vanilla-slider-ts", "slider-ts", "package", "plugin", "slider-plugin"],
+  "keywords": [
+    "slider",
+    "vanilla-slider",
+    "vanilla-slider-ts",
+    "slider-ts",
+    "package",
+    "plugin",
+    "slider-plugin"
+  ],
   "main": "./dist/vanilla-range-slider.umd.cjs",
   "module": "./dist/vanilla-range-slider.js",
   "types": "./dist/index.d.ts",
@@ -29,9 +37,9 @@
     "preview": "vite preview",
     "lint:scripts": "eslint . --ext .ts",
     "lint:styles": "stylelint ./**/*.{css,scss}",
-    "build:plugin": "tsc && vite build",
-    "build:demo": "tsc && vite build",
-    "predeploy": "npm run build:demo",
+    "build:plugin": "tsc && vite build --config vite.config.ts",
+    "build:demo": "tsc && vite build --config demo.config.ts",
+    "predeploy:demo": "npm run build:demo",
     "deploy:demo": "gh-pages -d dist"
   },
   "devDependencies": {
@@ -58,6 +66,7 @@
     "stylelint-config-recommended": "^10.0.1",
     "stylelint-config-standard-scss": "^7.0.0",
     "vite-plugin-dts": "^2.3.0",
-    "vite-plugin-html": "^3.2.0"
+    "vite-plugin-minify": "^1.5.2",
+    "vite-plugin-pwa": "^0.14.7"
   }
 }
