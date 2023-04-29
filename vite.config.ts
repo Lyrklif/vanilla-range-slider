@@ -5,11 +5,13 @@ import replaceAllInserter from 'string.prototype.replaceall';
 
 replaceAllInserter.shim();
 
+const isProd = process.env.NODE_ENV !== 'development';
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [dts()],
   base: '/vanilla-range-slider/',
-  publicDir: false,
+  ...(isProd && { publicDir: false }),
   build: {
     manifest: true,
     minify: true,
