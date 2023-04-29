@@ -1,7 +1,7 @@
-const initSlider = (targetName: string) => {
-  const elements = document.querySelectorAll(targetName);
+import Controller from './controller/controller';
+import type { TSliderProps } from './controller/types';
+import { modeStrict, modeFree } from './controller/types';
 
-  console.log('TTT elements', elements);
-};
-
-export default initSlider;
+export default Controller;
+export type { TSliderProps };
+export { modeStrict, modeFree };

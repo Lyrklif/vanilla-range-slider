@@ -1,12 +1,46 @@
 {
   "name": "vanilla-slider-ts",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "homepage": "https://lyrklif.github.io/vanilla-range-slider/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Lyrklif/vanilla-range-slider.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Lyrklif/vanilla-range-slider/issues"
+  },
+  "keywords": [
+    "slider",
+    "vanilla-slider",
+    "vanilla-slider-ts",
+    "slider-ts",
+    "package",
+    "plugin",
+    "slider-plugin"
+  ],
+  "main": "./dist/vanilla-range-slider.umd.cjs",
+  "module": "./dist/vanilla-range-slider.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/vanilla-range-slider.js",
+      "require": "./dist/vanilla-range-slider.umd.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "dev": "vite --host --base /",
+    "preview": "vite preview",
+    "lint:scripts": "eslint . --ext .ts",
+    "lint:styles": "stylelint ./**/*.{css,scss}",
+    "build:plugin": "tsc && vite build --config vite.config.ts",
+    "build:demo": "tsc && vite build --config demo.config.ts",
+    "predeploy:demo": "npm run build:demo",
+    "deploy:demo": "gh-pages -d dist"
   },
   "devDependencies": {
     "sass": "^1.58.0",
@@ -15,14 +49,24 @@
   },
   "dependencies": {
     "@rushstack/eslint-patch": "^1.2.0",
-    "@typescript-eslint/eslint-plugin": "^5.13.0",
+    "@types/node": "^18.16.3",
+    "@typescript-eslint/eslint-plugin": "^5.54.0",
     "@typescript-eslint/parser": "^5.0.0",
     "airbnb": "^0.0.2",
     "eslint": "8.22.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "gh-pages": "^5.0.0",
+    "path": "^0.12.7",
+    "prettier": "^2.8.4",
+    "string.prototype.replaceall": "^1.0.7",
     "stylelint": "^15.1.0",
     "stylelint-config-recommended": "^10.0.1",
-    "stylelint-config-standard-scss": "^7.0.0"
+    "stylelint-config-standard-scss": "^7.0.0",
+    "vite-plugin-dts": "^2.3.0",
+    "vite-plugin-minify": "^1.5.2",
+    "vite-plugin-pwa": "^0.14.7"
   }
 }

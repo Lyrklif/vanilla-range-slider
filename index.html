@@ -2,17 +2,37 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="icon" href="/favicon.ico">
+
     <title>Vanilla Slider TS</title>
   </head>
   <body>
     <main>
       <header>
-        <h1>Slider Demo</h1>
+        <h1>VanillaRangeSlider Demo</h1>
       </header>
-      <div id="slider-settings"></div>
-      <div id="slider"></div>
+      <div class='sliders'>
+        <p><code>strict</code> mode</p>
+        <div id="horizontal-slider" class="horizontal-slider"></div>
+        <p><code>free</code> mode</p>
+        <div id="horizontal-slider2" class="horizontal-slider"></div>
+      </div>
+
+      <div class='sliders sliders2'>
+        <div class='sliders2__child'>
+          <p><code>strict</code> mode</p>
+          <div id="vertical-slider" class="vertical-slider"></div>
+        </div>
+        <div class='sliders2__child'>
+          <p><code>free</code> mode</p>
+          <div id="vertical-slider2" class="vertical-slider"></div>
+        </div>
+      </div>
     </main>
     <script type="module" src="/src/main.ts"></script>
   </body>
