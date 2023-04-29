@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/vanilla-range-slider/sw.js', { scope: '/vanilla-range-slider/' })})}
