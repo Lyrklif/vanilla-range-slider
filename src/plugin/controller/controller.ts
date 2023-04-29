@@ -1,7 +1,7 @@
 import { MAX_PERCENT, MIN_PERCENT } from '../constants/percents';
 
 import Model from '../model/model';
-import View from '../view/View';
+import View from '../view/view';
 import Observer from '../observer/observer';
 
 import type { TSliderProps } from './types';
